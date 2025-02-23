@@ -1,0 +1,36 @@
+{
+  "platform": {
+    "wms": {
+      "hostname": "wms",
+      "disk_read_bandwidth": "100MBps",
+      "disk_write_bandwidth": "100MBps",
+      "network_bandwidth": "10Gbps"
+    },
+    "workers": [
+      {
+        "hostname": "worker1",
+        "speed": "10Gf",
+        "num_cores": 2,
+        "network_bandwidth": "10Gbps"
+      }
+    ]
+  },
+  "workflow": {
+    "file": "./genome.json",
+    "reference_flops": "1f",
+    "done_tasks": [
+      "individuals_ID0000001",
+      "individuals_ID0000002",
+      "individuals_ID0000003"
+    ],
+    "ongoing_tasks": [
+      {"task": "individuals_ID0000004", "worker":  "worker1", "how_far_back":  3.0},
+      {"task": "individuals_ID0000005", "worker":  "worker1", "how_far_back":  1.0}
+    ]
+  },
+  "scheduling": {
+    "task_selection_scheme": "most_flops",
+    "worker_selection_scheme": "most_idle_cores",
+    "num_cores_selection_scheme": "one_core"
+  }
+}
