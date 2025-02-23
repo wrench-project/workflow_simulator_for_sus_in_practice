@@ -61,7 +61,6 @@ private:
     void prioritizeTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> &tasks) const;
     bool scheduleTask(const std::shared_ptr<wrench::WorkflowTask>& task,
                       std::shared_ptr<wrench::BareMetalComputeService> *picked_service,
-                      std::string &picked_host,
                       unsigned long *picked_num_cores);
     void submitTaskToWorker(const std::shared_ptr<wrench::WorkflowTask>& task, const std::shared_ptr<wrench::BareMetalComputeService> &cs, unsigned long num_cores);
 

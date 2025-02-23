@@ -52,7 +52,6 @@ void SimpleStandardJobScheduler::prioritizeTasks(std::vector<std::shared_ptr<wre
 /** Returns true if found something **/
 bool SimpleStandardJobScheduler::scheduleTask(const std::shared_ptr<wrench::WorkflowTask>& task,
                                               std::shared_ptr<wrench::BareMetalComputeService>* picked_worker,
-                                              std::string& picked_host,
                                               unsigned long* picked_num_cores) {
     // Weed out impossible workers
     std::set<std::shared_ptr<wrench::BareMetalComputeService>> possible_workers;
@@ -77,20 +76,7 @@ bool SimpleStandardJobScheduler::scheduleTask(const std::shared_ptr<wrench::Work
     //    }
 
     *picked_worker = _worker_selection_scheme(task, possible_workers);
-
-    //    WRENCH_INFO("PICKING NUM_CORES");
-
-    // *picked_num_cores = this->core_selection_schemes[std::get<2>(
-    //     this->enabled_scheduling_algorithms[this->current_scheduling_algorithm])](task, *picked_service);
-    // for (auto const& entry : this->idle_cores_map[*picked_service])
-    // {
-    //     if (entry.second >= *picked_num_cores)
-    //     {
-    //         picked_host = entry.first;
-    //         break;
-    //     }
-    // }
-    *picked_num_cores = 1;
+    *picked_num_cores = _num_cores_selection_scheme(task, *picked_worker);
 
     return true;
 }
@@ -102,17 +88,14 @@ void SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrenc
     //        std::cerr << "READY TASK: " << rt->getID() << ": NC = " << rt->getNumberOfChildren() <<"\n";
     //    }
 
-    // int num_scheduled_tasks = 0;
-    //    WRENCH_INFO("SCHEDULING TASKS");
     for (const auto& task : tasks)
     {
-        //        WRENCH_INFO("Trying to schedule ready task %s", task->getID().c_str());
+        //  WRENCH_INFO("Trying to schedule ready task %s", task->getID().c_str());
         std::shared_ptr<wrench::BareMetalComputeService> picked_service;
-        std::string picked_host;
         unsigned long picked_num_cores;
 
         // WRENCH_INFO("Trying to schedule task %s", task->getID().c_str());
-        if (not scheduleTask(task, &picked_service, picked_host, &picked_num_cores))
+        if (not scheduleTask(task, &picked_service, &picked_num_cores))
         {
             // WRENCH_INFO("Wasn't able to schedule task %s", task->getID().c_str());
             continue;
@@ -123,12 +106,9 @@ void SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrenc
                     picked_service->getHostname().c_str(),
                     picked_num_cores);
 
-              // num_scheduled_tasks++;
-
         // Submitting the task as a simple job
         this->submitTaskToWorker(task, picked_service, picked_num_cores);
     }
-    //    std::cerr << "DEBUG SCHEDULED " << num_scheduled_tasks << "\n";
     WRENCH_INFO("Done with scheduling tasks as standard jobs");
 }
 
