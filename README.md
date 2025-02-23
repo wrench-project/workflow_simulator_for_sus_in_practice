@@ -2,8 +2,7 @@
 
 After building the simulator (see instructions below), just invoke it
 as `./workflow_simulator --help` to see the usage message. See the `./data`
-director for a sample invocation. 
-```
+directory for a sample invocation.
 
 ## Building the simulator from source
 

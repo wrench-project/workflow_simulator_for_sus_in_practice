@@ -56,8 +56,7 @@ int SimpleWMS::main() {
     WRENCH_INFO("The \"real\" time origin is: %lf", _time_origin);
 
     /* Main simulation loop */
-    while (not _workflow->isDone())
-    {
+    while (not _workflow->isDone()) {
         // Get the ready tasks
         const auto ready_tasks = _workflow->getReadyTasks();
 
@@ -65,28 +64,28 @@ int SimpleWMS::main() {
         _scheduler->scheduleTasks(ready_tasks);
 
         // Wait for a workflow execution event, and process it
-        try
-        {
+        try {
             this->waitForAndProcessNextEvent();
         }
-        catch (wrench::ExecutionException& e)
-        {
+        catch (wrench::ExecutionException& e) {
             WRENCH_INFO("Error while getting next execution event (%s)... ignoring and trying again",
                         (e.getCause()->toString().c_str()));
-            continue;
         }
     }
     return 0;
 }
 
 void SimpleWMS::processEventStandardJobCompletion(const std::shared_ptr<wrench::StandardJobCompletedEvent>& event) {
-    auto task = event->standard_job->getTasks().at(0);
+    const auto task = event->standard_job->getTasks().at(0);
     //    std::cerr << wrench::Simulation::getCurrentSimulatedDate() << ": COMPLETED: " << task->getID() << ": " << task->getNumCoresAllocated() << "\n";
     // std::cerr << "JOB COMPLETED: task " << task->getID() << " (" << task->getExecutionHost() << ", " << task->getNumCoresAllocated() << ")\n";
-    auto cs = event->compute_service;
+    auto cs = std::dynamic_pointer_cast<wrench::BareMetalComputeService>(event->compute_service);
 
     // std::cerr << "UPDATING CORES[" << event->compute_service->getHostname() << "] += " << task->getNumCoresAllocated() << "\n";
-    _scheduler->_idle_cores_map[std::dynamic_pointer_cast<wrench::BareMetalComputeService>(event->compute_service)] += task->getNumCoresAllocated();
+    _scheduler->_idle_cores_map[std::dynamic_pointer_cast<wrench::BareMetalComputeService>(event->compute_service)] +=
+        task->getNumCoresAllocated();
+
+    _completed_tasks.emplace_back(wrench::Simulation::getCurrentSimulatedDate() - _time_origin, task, cs);
 }
 
 void SimpleWMS::processEventStandardJobFailure(const std::shared_ptr<wrench::StandardJobFailedEvent>& event) {
@@ -95,26 +94,23 @@ void SimpleWMS::processEventStandardJobFailure(const std::shared_ptr<wrench::Sta
 
 void SimpleWMS::startOngoingTasks() const {
     double last_task_submit_date;
-    for (int task_index = 0; task_index < _ongoing_tasks.size(); ++task_index)
-    {
+    for (int task_index = 0; task_index < _ongoing_tasks.size(); ++task_index) {
         auto ongoing_task = _ongoing_tasks.at(task_index);
-        auto how_far_back = std::get<0>(ongoing_task);
+        const auto how_far_back = std::get<0>(ongoing_task);
         auto cs = std::get<1>(ongoing_task);
         auto task = std::get<2>(ongoing_task);
 
         // If not the first task and not the last task, then sleep the delta with the previous task
-        if (task_index > 0)
-        {
+        if (task_index > 0) {
             wrench::Simulation::sleep(std::get<0>(_ongoing_tasks.at(task_index - 1)));
         }
         // Submit task to the worker
-        WRENCH_INFO("Submitting ongoing task %s to the worker on host %s (how far back = %lf)", task->getID().c_str(),
+        WRENCH_INFO("Submitting ongoing task %s to worker %s (how far back = %lf)", task->getID().c_str(),
                     cs->getHostname().c_str(), how_far_back);
         _scheduler->submitTaskToWorker(task, cs, 1);
 
         // If the last task, sleep up to the time origin
-        if (task_index == _ongoing_tasks.size() - 1)
-        {
+        if (task_index == _ongoing_tasks.size() - 1) {
             wrench::Simulation::sleep(how_far_back);
         }
     }

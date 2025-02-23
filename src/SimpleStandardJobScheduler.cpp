@@ -29,13 +29,11 @@ void SimpleStandardJobScheduler::init(
     _compute_services = std::move(compute_services);
 
     // Create idle core map
-    for (auto const& cs : _compute_services)
-    {
+    for (auto const& cs : _compute_services) {
         _idle_cores_map[cs] = cs->getPerHostNumCores().begin()->second;
     }
     // Create core flop rate map
-    for (auto const& cs : _compute_services)
-    {
+    for (auto const& cs : _compute_services) {
         _core_flop_rate_map[cs] = cs->getCoreFlopRate().begin()->second;
     }
 }
@@ -55,16 +53,13 @@ bool SimpleStandardJobScheduler::scheduleTask(const std::shared_ptr<wrench::Work
                                               unsigned long* picked_num_cores) {
     // Weed out impossible workers
     std::set<std::shared_ptr<wrench::BareMetalComputeService>> possible_workers;
-    for (auto const& s : _compute_services)
-    {
-        if (this->taskCanRunOn(task, s))
-        {
+    for (auto const& s : _compute_services) {
+        if (this->taskCanRunOn(task, s)) {
             possible_workers.insert(s);
         }
     }
 
-    if (possible_workers.empty())
-    {
+    if (possible_workers.empty()) {
         *picked_worker = nullptr;
         *picked_num_cores = 0;
         return false;
@@ -88,15 +83,13 @@ void SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrenc
     //        std::cerr << "READY TASK: " << rt->getID() << ": NC = " << rt->getNumberOfChildren() <<"\n";
     //    }
 
-    for (const auto& task : tasks)
-    {
+    for (const auto& task : tasks) {
         //  WRENCH_INFO("Trying to schedule ready task %s", task->getID().c_str());
         std::shared_ptr<wrench::BareMetalComputeService> picked_service;
         unsigned long picked_num_cores;
 
         // WRENCH_INFO("Trying to schedule task %s", task->getID().c_str());
-        if (not scheduleTask(task, &picked_service, &picked_num_cores))
-        {
+        if (not scheduleTask(task, &picked_service, &picked_num_cores)) {
             // WRENCH_INFO("Wasn't able to schedule task %s", task->getID().c_str());
             continue;
         }
@@ -121,37 +114,34 @@ std::string SimpleStandardJobScheduler::getDocumentation() {
     scheduler_doc += "\t* Worker selection schemes:\n";
     scheduler_doc += this->getWorkerSelectionSchemeDocumentation();
     scheduler_doc += "\t* Core selection schemes:\n";
-    scheduler_doc += this->getCoreSelectionSchemeDocumentation();
+    scheduler_doc += this->getNumCoresSelectionSchemeDocumentation();
     return scheduler_doc;
 }
 
 
-std::string SimpleStandardJobScheduler::getTaskPrioritySchemeDocumentation() {
+std::string SimpleStandardJobScheduler::getTaskPrioritySchemeDocumentation() const {
     std::string documentation;
 
-    for (auto const& e : _task_selection_schemes)
-    {
+    for (auto const& e : _task_selection_schemes) {
         documentation += "\t\t- " + e.first + "\n";
     }
     return documentation;
 }
 
 
-std::string SimpleStandardJobScheduler::getWorkerSelectionSchemeDocumentation() {
+std::string SimpleStandardJobScheduler::getWorkerSelectionSchemeDocumentation() const {
     std::string documentation;
 
-    for (auto const& e : _worker_selection_schemes)
-    {
+    for (auto const& e : _worker_selection_schemes) {
         documentation += "\t\t- " + e.first + "\n";
     }
     return documentation;
 }
 
-std::string SimpleStandardJobScheduler::getCoreSelectionSchemeDocumentation() {
+std::string SimpleStandardJobScheduler::getNumCoresSelectionSchemeDocumentation() const {
     std::string documentation;
 
-    for (auto const& e : _num_cores_selection_schemes)
-    {
+    for (auto const& e : _num_cores_selection_schemes) {
         documentation += "\t\t- " + e.first + "\n";
     }
     return documentation;
@@ -161,38 +151,33 @@ std::vector<std::string> SimpleStandardJobScheduler::stringSplit(const std::stri
     stringstream ss(str);
     std::vector<std::string> tokens;
     string item;
-    while (getline(ss, item, sep))
-    {
+    while (getline(ss, item, sep)) {
         tokens.push_back(item);
     }
     return tokens;
 }
 
 void SimpleStandardJobScheduler::computeNumbersOfChildren(const std::shared_ptr<wrench::Workflow>& workflow) {
-    for (auto const& t : workflow->getTasks())
-    {
+    for (auto const& t : workflow->getTasks()) {
         _number_children[t] = t->getNumberOfChildren();
     }
 }
 
 
 void SimpleStandardJobScheduler::computeBottomLevels(const std::shared_ptr<wrench::Workflow>& workflow) {
-    for (auto const& t : workflow->getEntryTasks())
-    {
+    for (auto const& t : workflow->getEntryTasks()) {
         computeTaskBottomLevel(t);
     }
 }
 
 void SimpleStandardJobScheduler::computeTaskBottomLevel(const std::shared_ptr<wrench::WorkflowTask>& task) {
-    if (_bottom_levels.find(task) != _bottom_levels.end())
-    {
+    if (_bottom_levels.find(task) != _bottom_levels.end()) {
         return;
     }
 
     double my_bl = task->getFlops();
     double max = 0.0;
-    for (const auto& child : task->getChildren())
-    {
+    for (const auto& child : task->getChildren()) {
         computeTaskBottomLevel(child);
         double bl = _bottom_levels[child];
         max = (bl < max ? max : bl);
@@ -208,13 +193,11 @@ void SimpleStandardJobScheduler::submitTaskToWorker(const std::shared_ptr<wrench
     std::map<std::shared_ptr<wrench::DataFile>, std::shared_ptr<wrench::FileLocation>> file_locations;
 
     // Input files are read from the "best" location
-    for (const auto& f : task->getInputFiles())
-    {
+    for (const auto& f : task->getInputFiles()) {
         file_locations.insert(std::make_pair(f, wrench::FileLocation::LOCATION(_storage_service, f)));
     }
 
-    for (const auto& f : task->getOutputFiles())
-    {
+    for (const auto& f : task->getOutputFiles()) {
         file_locations.insert(std::make_pair(f, wrench::FileLocation::LOCATION(_storage_service, f)));
     }
 
@@ -229,24 +212,21 @@ void SimpleStandardJobScheduler::submitTaskToWorker(const std::shared_ptr<wrench
 }
 
 void SimpleStandardJobScheduler::setTaskSelectionScheme(const std::string& scheme_name) {
-    if (_task_selection_schemes.find(scheme_name) == _task_selection_schemes.end())
-    {
+    if (_task_selection_schemes.find(scheme_name) == _task_selection_schemes.end()) {
         throw std::invalid_argument("Unknown task selection scheme: " + scheme_name);
     }
     _task_selection_scheme = _task_selection_schemes.at(scheme_name);
 }
 
 void SimpleStandardJobScheduler::setWorkerSelectionScheme(const std::string& scheme_name) {
-    if (_worker_selection_schemes.find(scheme_name) == _worker_selection_schemes.end())
-    {
+    if (_worker_selection_schemes.find(scheme_name) == _worker_selection_schemes.end()) {
         throw std::invalid_argument("Unknown worker selection scheme: " + scheme_name);
     }
     _worker_selection_scheme = _worker_selection_schemes.at(scheme_name);
 }
 
 void SimpleStandardJobScheduler::setNumCoresSelectionScheme(const std::string& scheme_name) {
-    if (_num_cores_selection_schemes.find(scheme_name) == _num_cores_selection_schemes.end())
-    {
+    if (_num_cores_selection_schemes.find(scheme_name) == _num_cores_selection_schemes.end()) {
         throw std::invalid_argument("Unknown num_cores selection scheme: " + scheme_name);
     }
     _num_cores_selection_scheme = _num_cores_selection_schemes.at(scheme_name);

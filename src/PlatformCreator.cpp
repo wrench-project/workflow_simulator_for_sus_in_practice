@@ -5,7 +5,6 @@
 
 
 std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*> PlatformCreator::create_wms(sg4::NetZone* root) {
-
     // Create the WMSHost host with its disk
     const std::string hostname = _platform_spec["wms"]["hostname"];
     const std::string speed = "10000000Gf";
@@ -14,8 +13,8 @@ std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*> PlatformCreator::create_wms
     std::string disk_read_bandwidth = _platform_spec["wms"]["disk_read_bandwidth"];
     std::string disk_write_bandwidth = _platform_spec["wms"]["disk_write_bandwidth"];
     auto wms_disk = wms_host->create_disk("wms_disk",
-                                        disk_read_bandwidth,
-                                        disk_write_bandwidth);
+                                          disk_read_bandwidth,
+                                          disk_write_bandwidth);
     wms_disk->set_property("size", "5000EiB");
     wms_disk->set_property("mount", "/");
 
@@ -26,10 +25,9 @@ std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*> PlatformCreator::create_wms
 }
 
 std::vector<std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*>> PlatformCreator::create_workers(sg4::NetZone* root) {
-
     std::vector<std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*>> workers;
 
-    for (auto const &worker_spec : _platform_spec["workers"]) {
+    for (auto const& worker_spec : _platform_spec["workers"]) {
         const std::string hostname = worker_spec["hostname"];
         const std::string speed = worker_spec["speed"];
         auto worker_host = root->create_host(hostname, speed);
@@ -54,7 +52,7 @@ void PlatformCreator::create_platform() {
 
 
     // Create all routes
-    for (auto const &worker : workers) {
+    for (auto const& worker : workers) {
         sg4::LinkInRoute link1{std::get<0>(wms)};
         sg4::LinkInRoute link2{std::get<0>(worker)};
         zone->add_route(std::get<1>(wms),

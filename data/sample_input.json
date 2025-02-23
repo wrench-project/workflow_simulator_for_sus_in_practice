@@ -9,7 +9,7 @@
     "workers": [
       {
         "hostname": "worker1",
-        "speed": "10Gf",
+        "speed": "1f",
         "num_cores": 2,
         "network_bandwidth": "10Gbps"
       }

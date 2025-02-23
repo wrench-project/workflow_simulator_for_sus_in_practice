@@ -18,7 +18,6 @@ class SimpleStandardJobScheduler;
  *  @brief A simple WMS implementation
  */
 class SimpleWMS : public wrench::ExecutionController {
-
 public:
     SimpleWMS(const std::string& hostname,
               std::shared_ptr<wrench::SimpleStorageService> storage_service,
@@ -30,6 +29,7 @@ public:
 
     double getTimeOrigin() const { return _time_origin; }
 
+    std::vector<std::tuple<double, std::shared_ptr<wrench::WorkflowTask>, std::shared_ptr<wrench::BareMetalComputeService>>> _completed_tasks;
 private:
     int main() override;
     void processEventStandardJobCompletion(const std::shared_ptr<wrench::StandardJobCompletedEvent>& event) override;
@@ -44,6 +44,7 @@ private:
     SimpleStandardJobScheduler* _scheduler;
 
     std::shared_ptr<wrench::JobManager> _job_manager;
+
 
     double _time_origin = 0;
 };

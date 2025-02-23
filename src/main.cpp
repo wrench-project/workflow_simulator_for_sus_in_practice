@@ -26,8 +26,7 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(workflow_simulator, "Log category for main");
 void startServices(nlohmann::json platform_spec,
                    std::set<std::shared_ptr<wrench::BareMetalComputeService>>& compute_services,
                    std::shared_ptr<wrench::SimpleStorageService>& storage_service) {
-    for (const auto& worker_spec : platform_spec["workers"])
-    {
+    for (const auto& worker_spec : platform_spec["workers"]) {
         std::string hostname = worker_spec["hostname"];
         auto cs = simulation->add(
             new wrench::BareMetalComputeService(
@@ -73,11 +72,9 @@ int main(int argc, char** argv) {
         vm
     );
 
-    try
-    {
+    try {
         // Print help message and exit if needed
-        if (vm.count("help"))
-        {
+        if (vm.count("help")) {
             std::cerr << desc;
             std::cerr << scheduler->getDocumentation();
             exit(0);
@@ -87,20 +84,17 @@ int main(int argc, char** argv) {
 
         json_input = nlohmann::json::parse(json_input_string);
     }
-    catch (std::exception& e)
-    {
+    catch (std::exception& e) {
         cerr << "Error: " << e.what() << "\n";
         exit(1);
     }
 
     // Creation of the platform
-    try
-    {
+    try {
         PlatformCreator platform_creator(json_input["platform"]);
         simulation->instantiatePlatform(platform_creator);
     }
-    catch (std::exception& e)
-    {
+    catch (std::exception& e) {
         std::cerr << e.what() << "\n";
         exit(1);
     }
@@ -112,8 +106,7 @@ int main(int argc, char** argv) {
 
     // Create a convenient map of hostname to compute service
     std::map<std::string, std::shared_ptr<wrench::BareMetalComputeService>> compute_services_map;
-    for (auto const &service : compute_services)
-    {
+    for (auto const& service : compute_services) {
         compute_services_map[service->getHostname()] = service;
     }
 
@@ -141,36 +134,24 @@ int main(int argc, char** argv) {
     // Create the WMS
     auto wms = simulation->add(
         new SimpleWMS(
-                        json_input["platform"]["wms"]["hostname"],
-                        storage_service,
-                      compute_services,
-                      scheduler,
-                      workflow,
-                      ongoing_tasks));
+            json_input["platform"]["wms"]["hostname"],
+            storage_service,
+            compute_services,
+            scheduler,
+            workflow,
+            ongoing_tasks));
 
-    // TODO: Set the amdahl parameter for each task between 0.5 and 0.9
-    // std::uniform_real_distribution<double> random_dist(min_task_parallel_efficiency, max_task_parallel_efficiency);
-    // std::mt19937 rng(42);
-    // for (auto const& t : workflow->getTasks())
-    // {
-    //     t->setParallelModel(wrench::ParallelModel::AMDAHL(random_dist(rng)));
-    // }
-
-    // simulation->getOutput().enableFileReadWriteCopyTimestamps(false);
-    // simulation->getOutput().enableWorkflowTaskTimestamps(false);
-    // // Launch the simulation
+    // Launch the simulation
     std::cerr << "Launching the Simulation..." << std::endl;
     timeval begin_sim{}, end_sim{};
 
     gettimeofday(&begin_sim, nullptr);
-    try
-    {
+    try {
         simulation->launch();
     }
-    catch (std::runtime_error& e)
-    {
+    catch (std::runtime_error& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
-        return 0;
+        return 1;
     }
     gettimeofday(&end_sim, nullptr);
 
@@ -179,7 +160,16 @@ int main(int argc, char** argv) {
     output_json["simulation_time"] = ((static_cast<double>(end_sim.tv_sec) * 1000000 + end_sim.tv_usec) -
         (static_cast<double>(begin_sim.tv_sec) * 1000000 +
             begin_sim.tv_usec)) / 1000000.0;
-    output_json["makespan"] = workflow->getCompletionDate() - wms->getTimeOrigin();
+    output_json["finish_date"] = workflow->getCompletionDate() - wms->getTimeOrigin();
+    nlohmann::json task_completion_arrays = nlohmann::json::array();
+    for (auto const &task_completion : wms->_completed_tasks) {
+        task_completion_arrays.push_back({
+            {"date", std::get<0>(task_completion)},
+            {"task",std::get<1>(task_completion)->getID()},
+            {"worker", std::get<2>(task_completion)->hostname}
+        });
+    }
+    output_json["task_completions"] = task_completion_arrays;
     std::cout << output_json.dump() << std::endl;
 
     exit(0);

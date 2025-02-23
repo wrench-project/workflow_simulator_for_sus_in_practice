@@ -19,17 +19,15 @@
 
 
 class SimpleStandardJobScheduler {
-
 public:
-
     explicit SimpleStandardJobScheduler();
 
-    void scheduleTasks(std::vector<std::shared_ptr<wrench::WorkflowTask> > tasks);
+    void scheduleTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> tasks);
 
     void init(
-            std::shared_ptr<wrench::JobManager> job_manager,
-            std::set<std::shared_ptr<wrench::BareMetalComputeService>> compute_services,
-            std::shared_ptr<wrench::StorageService> storage_service);
+        std::shared_ptr<wrench::JobManager> job_manager,
+        std::set<std::shared_ptr<wrench::BareMetalComputeService>> compute_services,
+        std::shared_ptr<wrench::StorageService> storage_service);
 
     std::string getDocumentation();
 
@@ -48,9 +46,9 @@ private:
 
     static std::vector<std::string> stringSplit(const std::string& str, char sep);
 
-    std::string getTaskPrioritySchemeDocumentation();
-    std::string getWorkerSelectionSchemeDocumentation();
-    std::string getCoreSelectionSchemeDocumentation();
+    std::string getTaskPrioritySchemeDocumentation() const;
+    std::string getWorkerSelectionSchemeDocumentation() const;
+    std::string getNumCoresSelectionSchemeDocumentation() const;
 
     void computeTaskBottomLevel(const std::shared_ptr<wrench::WorkflowTask>& task);
 
@@ -58,28 +56,35 @@ private:
     void initWorkerSelectionSchemes();
     void initCoreSelectionSchemes();
 
-    void prioritizeTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> &tasks) const;
+    void prioritizeTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>>& tasks) const;
     bool scheduleTask(const std::shared_ptr<wrench::WorkflowTask>& task,
-                      std::shared_ptr<wrench::BareMetalComputeService> *picked_service,
-                      unsigned long *picked_num_cores);
-    void submitTaskToWorker(const std::shared_ptr<wrench::WorkflowTask>& task, const std::shared_ptr<wrench::BareMetalComputeService> &cs, unsigned long num_cores);
+                      std::shared_ptr<wrench::BareMetalComputeService>* picked_service,
+                      unsigned long* picked_num_cores);
+    void submitTaskToWorker(const std::shared_ptr<wrench::WorkflowTask>& task,
+                            const std::shared_ptr<wrench::BareMetalComputeService>& cs, unsigned long num_cores);
 
 
-    // std::shared_ptr<wrench::FileLocation> pick_location(const std::shared_ptr<wrench::BareMetalComputeService>& compute_service,
-    //                                                     const std::shared_ptr<wrench::DataFile>& file);
-
-    bool taskCanRunOn(const std::shared_ptr<wrench::WorkflowTask>& task, const std::shared_ptr<wrench::BareMetalComputeService>& service);
+    bool taskCanRunOn(const std::shared_ptr<wrench::WorkflowTask>& task,
+                      const std::shared_ptr<wrench::BareMetalComputeService>& service);
 
 
-    std::function<bool(const std::shared_ptr<wrench::WorkflowTask> a, const std::shared_ptr<wrench::WorkflowTask> b)> _task_selection_scheme;
-    std::function<std::shared_ptr<wrench::BareMetalComputeService> (const std::shared_ptr<wrench::WorkflowTask> task, const std::set<std::shared_ptr<wrench::BareMetalComputeService>> services)> _worker_selection_scheme;
-    std::function<unsigned long(const std::shared_ptr<wrench::WorkflowTask> a, const std::shared_ptr<wrench::BareMetalComputeService> service)> _num_cores_selection_scheme;
+    std::function<bool(std::shared_ptr<wrench::WorkflowTask> a, std::shared_ptr<wrench::WorkflowTask> b)>
+    _task_selection_scheme;
+    std::function<std::shared_ptr<wrench::BareMetalComputeService> (std::shared_ptr<wrench::WorkflowTask> task,
+                                                                    std::set<std::shared_ptr<
+                                                                        wrench::BareMetalComputeService>> services)>
+    _worker_selection_scheme;
+    std::function<unsigned long(std::shared_ptr<wrench::WorkflowTask> a,
+                                std::shared_ptr<wrench::BareMetalComputeService> service)> _num_cores_selection_scheme;
 
-    std::map<std::string, std::function<bool(const std::shared_ptr<wrench::WorkflowTask> a, const std::shared_ptr<wrench::WorkflowTask> b)>> _task_selection_schemes;
-    std::map<std::string, std::function<std::shared_ptr<wrench::BareMetalComputeService> (const std::shared_ptr<wrench::WorkflowTask> task, const std::set<std::shared_ptr<wrench::BareMetalComputeService>> services)>> _worker_selection_schemes;
-    std::map<std::string, std::function<unsigned long(const std::shared_ptr<wrench::WorkflowTask> a, const std::shared_ptr<wrench::BareMetalComputeService> service)>> _num_cores_selection_schemes;
-
-    nlohmann::json _scheduler_spec;
+    std::map<std::string, std::function<bool(std::shared_ptr<wrench::WorkflowTask> a,
+                                             std::shared_ptr<wrench::WorkflowTask> b)>> _task_selection_schemes;
+    std::map<std::string, std::function<std::shared_ptr<wrench::BareMetalComputeService> (
+                 std::shared_ptr<wrench::WorkflowTask> task,
+                 std::set<std::shared_ptr<wrench::BareMetalComputeService>> services)>> _worker_selection_schemes;
+    std::map<std::string, std::function<unsigned long(std::shared_ptr<wrench::WorkflowTask> a,
+                                                      std::shared_ptr<wrench::BareMetalComputeService> service)>>
+    _num_cores_selection_schemes;
 
     std::shared_ptr<wrench::StorageService> _storage_service;
     std::set<std::shared_ptr<wrench::BareMetalComputeService>> _compute_services;
@@ -87,8 +92,6 @@ private:
 
     std::map<std::shared_ptr<wrench::WorkflowTask>, double> _bottom_levels;
     std::map<std::shared_ptr<wrench::WorkflowTask>, unsigned long> _number_children;
-
 };
 
 #endif //MY_SIMPLESCHEDULER_H
-
