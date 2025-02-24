@@ -99,6 +99,8 @@ void SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrenc
                     picked_service->getHostname().c_str(),
                     picked_num_cores);
 
+        // Simulate the task scheduling overhead
+        wrench::Simulation::sleep(_task_scheduling_overhead);
         // Submitting the task as a simple job
         this->submitTaskToWorker(task, picked_service, picked_num_cores);
     }
@@ -230,4 +232,8 @@ void SimpleStandardJobScheduler::setNumCoresSelectionScheme(const std::string& s
         throw std::invalid_argument("Unknown num_cores selection scheme: " + scheme_name);
     }
     _num_cores_selection_scheme = _num_cores_selection_schemes.at(scheme_name);
+}
+
+void SimpleStandardJobScheduler::setTaskSchedulingOverhead(const double overhead_in_seconds) {
+    _task_scheduling_overhead = overhead_in_seconds;
 }

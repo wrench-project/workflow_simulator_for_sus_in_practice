@@ -126,6 +126,7 @@ int main(int argc, char** argv) {
     scheduler->setTaskSelectionScheme(json_input["scheduling"]["task_selection_scheme"]);
     scheduler->setWorkerSelectionScheme(json_input["scheduling"]["worker_selection_scheme"]);
     scheduler->setNumCoresSelectionScheme(json_input["scheduling"]["num_cores_selection_scheme"]);
+    scheduler->setTaskSchedulingOverhead(json_input["scheduling"]["task_scheduling_overhead"]);
 
     // Compute metrics useful for some scheduling algorithms
     scheduler->computeBottomLevels(workflow);
