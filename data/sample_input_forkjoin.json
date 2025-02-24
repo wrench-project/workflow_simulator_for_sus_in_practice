@@ -1,0 +1,45 @@
+{
+  "platform": {
+    "wms": {
+      "hostname": "wms",
+      "disk_read_bandwidth": "100MBps",
+      "disk_write_bandwidth": "100MBps",
+      "network_bandwidth": "10Gbps"
+    },
+    "workers": [
+      {
+        "hostname": "worker1",
+        "speed": "1f",
+        "num_cores": 2,
+        "network_bandwidth": "10Gbps"
+      },
+      {
+        "hostname": "worker2",
+        "speed": "1f",
+        "num_cores": 2,
+        "network_bandwidth": "10Gbps"
+      }
+    ]
+  },
+  "workflow": {
+    "file": "./forkjoin.json",
+    "reference_flops": "1f",
+    "done_tasks": [
+      "cpuhog_forkjoin_00000001",
+      "cpuhog_forkjoin_00000002",
+      "cpuhog_forkjoin_00000003",
+      "cpuhog_forkjoin_00000004",
+      "cpuhog_forkjoin_00000005"
+    ],
+    "ongoing_tasks": [
+      {"task": "cpuhog_forkjoin_00000006", "worker":  "worker1", "how_far_back":  5.0},
+      {"task": "cpuhog_forkjoin_00000007", "worker":  "worker2", "how_far_back":  5.0}
+    ]
+  },
+  "scheduling": {
+    "task_selection_scheme": "most_flops",
+    "worker_selection_scheme": "most_idle_cores",
+    "num_cores_selection_scheme": "one_core"
+  }
+}
+

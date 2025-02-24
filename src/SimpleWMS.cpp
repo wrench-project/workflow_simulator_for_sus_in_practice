@@ -102,7 +102,7 @@ void SimpleWMS::startOngoingTasks() const {
 
         // If not the first task and not the last task, then sleep the delta with the previous task
         if (task_index > 0) {
-            wrench::Simulation::sleep(std::get<0>(_ongoing_tasks.at(task_index - 1)));
+            wrench::Simulation::sleep(std::get<0>(_ongoing_tasks.at(task_index - 1)) - how_far_back);
         }
         // Submit task to the worker
         WRENCH_INFO("Submitting ongoing task %s to worker %s (how far back = %lf)", task->getID().c_str(),
