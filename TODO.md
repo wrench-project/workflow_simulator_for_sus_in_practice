@@ -1,4 +1,3 @@
-  - [ ] Debug the ongoing task replay thingy
 
   - [ ] Make sure that the ready queue is managed in the same way as in Parsl
 
