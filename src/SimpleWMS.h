@@ -25,11 +25,14 @@ public:
               SimpleStandardJobScheduler* scheduler,
               std::shared_ptr<wrench::Workflow> workflow,
               const std::vector<std::tuple<double, std::shared_ptr<wrench::BareMetalComputeService>, std::shared_ptr<
-                                               wrench::WorkflowTask>>>& ongoing_tasks);
+                                               wrench::WorkflowTask>>>& ongoing_tasks,
+              const std::set<std::shared_ptr<wrench::WorkflowTask>>& tasks_of_interest);
 
     double getTimeOrigin() const { return _time_origin; }
 
-    std::vector<std::tuple<double, std::shared_ptr<wrench::WorkflowTask>, std::shared_ptr<wrench::BareMetalComputeService>>> _completed_tasks;
+    std::vector<std::tuple<double, std::shared_ptr<wrench::WorkflowTask>, std::shared_ptr<
+                               wrench::BareMetalComputeService>>> _completed_tasks;
+
 private:
     int main() override;
     void processEventStandardJobCompletion(const std::shared_ptr<wrench::StandardJobCompletedEvent>& event) override;
@@ -39,11 +42,13 @@ private:
     std::shared_ptr<wrench::SimpleStorageService> _storage_service;
     std::set<std::shared_ptr<wrench::BareMetalComputeService>> _compute_services;
     std::shared_ptr<wrench::Workflow> _workflow;
-    std::vector<std::tuple<double, std::shared_ptr<wrench::BareMetalComputeService>, std::shared_ptr<
-                               wrench::WorkflowTask>>> _ongoing_tasks;
+    std::vector<std::tuple<double, std::shared_ptr<wrench::BareMetalComputeService>, std::shared_ptr<wrench::WorkflowTask>>> _ongoing_tasks;
+    std::set<std::shared_ptr<wrench::WorkflowTask>> _tasks_of_interest;
     SimpleStandardJobScheduler* _scheduler;
 
     std::shared_ptr<wrench::JobManager> _job_manager;
+
+    bool _stop_simulation = false;
 
 
     double _time_origin = 0;

@@ -32,8 +32,12 @@
       "cpuhog_forkjoin_00000005"
     ],
     "ongoing_tasks": [
-      {"task": "cpuhog_forkjoin_00000006", "worker":  "worker1", "how_far_back":  5.0},
+      {"task": "cpuhog_forkjoin_00000006", "worker":  "worker1", "how_far_back":  25.0},
       {"task": "cpuhog_forkjoin_00000007", "worker":  "worker2", "how_far_back":  5.0}
+    ],
+    "interest_tasks": [
+      "cpuhog_forkjoin_00000008",
+      "cpuhog_forkjoin_00000009"
     ]
   },
   "scheduling": {

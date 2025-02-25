@@ -25,12 +25,14 @@ SimpleWMS::SimpleWMS(const std::string& hostname,
                      std::shared_ptr<wrench::Workflow> workflow,
                      const std::vector<std::tuple<
                          double, std::shared_ptr<wrench::BareMetalComputeService>, std::shared_ptr<
-                             wrench::WorkflowTask>>>& ongoing_tasks) :
+                             wrench::WorkflowTask>>>& ongoing_tasks,
+                     const std::set<std::shared_ptr<wrench::WorkflowTask>>& tasks_of_interest) :
     wrench::ExecutionController(hostname, "simple"),
     _storage_service(std::move(storage_service)),
     _compute_services(std::move(compute_services)),
     _workflow(std::move(workflow)),
     _ongoing_tasks(ongoing_tasks),
+    _tasks_of_interest(tasks_of_interest),
     _scheduler(scheduler) {
 }
 
@@ -56,7 +58,7 @@ int SimpleWMS::main() {
     WRENCH_INFO("The \"real\" time origin is: %lf", _time_origin);
 
     /* Main simulation loop */
-    while (not _workflow->isDone()) {
+    while (not _workflow->isDone() and not _stop_simulation) {
         // Get the ready tasks
         const auto ready_tasks = _workflow->getReadyTasks();
 
@@ -72,6 +74,9 @@ int SimpleWMS::main() {
                         (e.getCause()->toString().c_str()));
         }
     }
+
+    // Pretty wild
+    wrench::Simulation::sleep(0.00001);
     return 0;
 }
 
@@ -86,6 +91,19 @@ void SimpleWMS::processEventStandardJobCompletion(const std::shared_ptr<wrench::
         task->getNumCoresAllocated();
 
     _completed_tasks.emplace_back(wrench::Simulation::getCurrentSimulatedDate() - _time_origin, task, cs);
+
+    if (_tasks_of_interest.empty()) {
+        return;
+    } else {
+        if (_tasks_of_interest.find(task) != _tasks_of_interest.end()) {
+            _tasks_of_interest.erase(task);
+        } else {
+            return;
+        }
+        if (_tasks_of_interest.empty()) {
+            _stop_simulation = true;
+        }
+    }
 }
 
 void SimpleWMS::processEventStandardJobFailure(const std::shared_ptr<wrench::StandardJobFailedEvent>& event) {

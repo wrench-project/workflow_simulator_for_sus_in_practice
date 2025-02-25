@@ -65,3 +65,13 @@ WorkflowCreator::processOngoingTasks(
 
     return to_return;
 }
+
+std::set<std::shared_ptr<wrench::WorkflowTask>> WorkflowCreator::processTasksOfInterest(
+    const nlohmann::json& workflow_spec,
+    const std::shared_ptr<wrench::Workflow>& workflow) {
+    std::set<std::shared_ptr<wrench::WorkflowTask>> to_return;
+    for (std::string id : workflow_spec["interest_tasks"]) {
+        to_return.insert(workflow->getTaskByID(id));
+    }
+    return to_return;
+}

@@ -26,6 +26,9 @@
     "ongoing_tasks": [
       {"task": "individuals_ID0000004", "worker":  "worker1", "how_far_back":  3.0},
       {"task": "individuals_ID0000005", "worker":  "worker1", "how_far_back":  1.0}
+    ],
+    "interest_tasks": [
+      "individuals_ID0000008"
     ]
   },
   "scheduling": {

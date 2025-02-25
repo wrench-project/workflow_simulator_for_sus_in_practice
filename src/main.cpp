@@ -122,6 +122,8 @@ int main(int argc, char** argv) {
     // the ongoing tasks
     auto ongoing_tasks = WorkflowCreator::processOngoingTasks(json_input["workflow"], workflow, compute_services_map);
 
+    auto tasks_of_interest = WorkflowCreator::processTasksOfInterest(json_input["workflow"], workflow);
+
     // Configure the scheduler
     scheduler->setTaskSelectionScheme(json_input["scheduling"]["task_selection_scheme"]);
     scheduler->setWorkerSelectionScheme(json_input["scheduling"]["worker_selection_scheme"]);
@@ -140,7 +142,8 @@ int main(int argc, char** argv) {
             compute_services,
             scheduler,
             workflow,
-            ongoing_tasks));
+            ongoing_tasks,
+            tasks_of_interest));
 
     // Launch the simulation
     std::cerr << "Launching the Simulation..." << std::endl;
@@ -161,7 +164,7 @@ int main(int argc, char** argv) {
     output_json["simulation_time"] = ((static_cast<double>(end_sim.tv_sec) * 1000000 + end_sim.tv_usec) -
         (static_cast<double>(begin_sim.tv_sec) * 1000000 +
             begin_sim.tv_usec)) / 1000000.0;
-    output_json["finish_date"] = workflow->getCompletionDate() - wms->getTimeOrigin();
+    output_json["finish_date"] = wrench::Simulation::getCurrentSimulatedDate();
     nlohmann::json task_completion_arrays = nlohmann::json::array();
     for (auto const &task_completion : wms->_completed_tasks) {
         task_completion_arrays.push_back({
