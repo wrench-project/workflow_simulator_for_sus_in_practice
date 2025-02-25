@@ -60,7 +60,7 @@ WorkflowCreator::processOngoingTasks(
             & a,
             const tuple<double, std::shared_ptr<wrench::BareMetalComputeService>, std::shared_ptr<wrench::WorkflowTask>>
             & b) {
-             return get<0>(a) < get<0>(b);
+             return get<0>(a) > get<0>(b);
          });
 
     return to_return;
