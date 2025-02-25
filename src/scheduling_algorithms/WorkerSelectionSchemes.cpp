@@ -27,7 +27,7 @@ void SimpleStandardJobScheduler::initWorkerSelectionSchemes() {
             } else if (_core_flop_rate_map[s] > _core_flop_rate_map[picked]) {
                 picked = s;
             } else if ((std::abs<double>(_core_flop_rate_map[s] - _core_flop_rate_map[picked]) < 0.00001)
-                       and (s->getHostname() > picked->getHostname())) {
+                       and (s->getHostname() < picked->getHostname())) {
                 picked = s;
             }
         }
@@ -42,7 +42,7 @@ void SimpleStandardJobScheduler::initWorkerSelectionSchemes() {
             } else if (_core_flop_rate_map[s] < _core_flop_rate_map[picked]) {
                 picked = s;
             } else if ((std::abs<double>(_core_flop_rate_map[s] - _core_flop_rate_map[picked]) < 0.00001)
-                       and (s->getHostname() > picked->getHostname())) {
+                       and (s->getHostname() < picked->getHostname())) {
                 picked = s;
             }
         }
@@ -57,7 +57,7 @@ void SimpleStandardJobScheduler::initWorkerSelectionSchemes() {
             } else {
                 if (_idle_cores_map[s] > _idle_cores_map[picked]) {
                     picked = s;
-                } else if ((_idle_cores_map[s] == _idle_cores_map[picked]) and (s->getHostname() > picked->getHostname())) {
+                } else if ((_idle_cores_map[s] == _idle_cores_map[picked]) and (s->getHostname() < picked->getHostname())) {
                     picked = s;
                 }
             }
@@ -73,7 +73,7 @@ void SimpleStandardJobScheduler::initWorkerSelectionSchemes() {
             } else {
                 if (_idle_cores_map[s] < _idle_cores_map[picked]) {
                     picked = s;
-                } else if ((_idle_cores_map[s] == _idle_cores_map[picked]) and (s->getHostname() > picked->getHostname())) {
+                } else if ((_idle_cores_map[s] == _idle_cores_map[picked]) and (s->getHostname() < picked->getHostname())) {
                     picked = s;
                 }
             }
@@ -91,7 +91,7 @@ void SimpleStandardJobScheduler::initWorkerSelectionSchemes() {
                 const double picked_metric = static_cast<double>(_idle_cores_map[picked]) * _core_flop_rate_map[picked];
                 if (s_metric > picked_metric) {
                     picked = s;
-                } else if ((s_metric == picked_metric) and (s->getHostname() > picked->getHostname())) {
+                } else if ((s_metric == picked_metric) and (s->getHostname() < picked->getHostname())) {
                     picked = s;
                 }
             }

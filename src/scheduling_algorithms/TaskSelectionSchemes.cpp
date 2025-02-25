@@ -21,12 +21,13 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
 
     _task_selection_schemes["most_flops"] = [](const std::shared_ptr<wrench::WorkflowTask> &a,
                                                    const std::shared_ptr<wrench::WorkflowTask> &b) -> bool {
+        std::cerr << "COMPARING: " << a->getID() << " (" <<  a->getFlops() <<") and " << b->getID() << " (" << b->getFlops() << ")" << std::endl;
         if (a->getFlops() < b->getFlops()) {
             return false;
         } else if (a->getFlops() > b->getFlops()) {
             return true;
         } else {
-            return (a->getID() < b->getID());
+            return (a->getID() > b->getID());
         }
     };
 
@@ -37,7 +38,7 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
         } else if (a->getFlops() > b->getFlops()) {
             return false;
         } else {
-            return (a->getID() < b->getID());
+            return (a->getID() > b->getID());
         }
     };
 
@@ -76,7 +77,7 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
         } else if (a_bytes > b_bytes) {
             return false;
         } else {
-            return (a->getID() < b->getID());
+            return (a->getID() > b->getID());
         }
     };
 
@@ -92,7 +93,7 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
         } else if (a_bl > b_bl) {
             return true;
         } else {
-            return (a->getID() < b->getID());
+            return (a->getID() > b->getID());
         }
     };
 
@@ -108,7 +109,7 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
         } else if (a_bl > b_bl) {
             return false;
         } else {
-            return (a->getID() < b->getID());
+            return (a->getID() > b->getID());
         }
     };
 
@@ -124,7 +125,7 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
         } else if (a_num_children > b_num_children) {
             return true;
         } else {
-            return (a->getID() < b->getID());
+            return (a->getID() > b->getID());
         }
     };
 
@@ -140,7 +141,7 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
         } else if (a_num_children > b_num_children) {
             return false;
         } else {
-            return (a->getID() < b->getID());
+            return (a->getID() > b->getID());
         }
     };
 

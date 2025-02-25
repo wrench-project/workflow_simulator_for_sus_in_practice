@@ -35,7 +35,7 @@ set(SOURCE_FILES
         src/SimpleWMS.cpp
         src/SimpleStandardJobScheduler.h
         src/SimpleStandardJobScheduler.cpp
-        src/scheduling_algorithms/TaskPrioritySchemes.cpp
+        src/scheduling_algorithms/TaskSelectionSchemes.cpp
         src/scheduling_algorithms/WorkerSelectionSchemes.cpp
         src/scheduling_algorithms/CoreSelectionSchemes.cpp
         src/main.cpp
