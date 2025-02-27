@@ -26,8 +26,8 @@ XBT_LOG_NEW_DEFAULT_CATEGORY(workflow_simulator, "Log category for main");
 void startServices(nlohmann::json platform_spec,
                    std::set<std::shared_ptr<wrench::BareMetalComputeService>>& compute_services,
                    std::shared_ptr<wrench::SimpleStorageService>& storage_service) {
-    for (auto& [hostname, worker_spec] : _platform_spec["workers"].items()) {
-        //std::string hostname = worker_spec["hostname"];
+    for (auto& [hostname, worker_spec] : platform_spec["workers"].items()) {
+        std::string hostname = worker_spec["hostname"];
         auto cs = simulation->add(
             new wrench::BareMetalComputeService(
                 hostname, {hostname},
