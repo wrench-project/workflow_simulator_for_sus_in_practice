@@ -27,8 +27,8 @@ std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*> PlatformCreator::create_wms
 std::vector<std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*>> PlatformCreator::create_workers(sg4::NetZone* root) {
     std::vector<std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*>> workers;
 
-    for (auto const& worker_spec : _platform_spec["workers"]) {
-        const std::string hostname = worker_spec["hostname"];
+    for (auto& [hostname, worker_spec] : _platform_spec["workers"].items()) {
+        //const std::string hostname = worker_spec["hostname"];
         const std::string speed = worker_spec["speed"];
         auto worker_host = root->create_host(hostname, speed);
         worker_host->set_core_count(worker_spec["num_cores"].get<int>());
