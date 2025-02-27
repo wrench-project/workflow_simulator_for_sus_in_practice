@@ -6,20 +6,18 @@
       "disk_write_bandwidth": "[[calibration parameter]]",
       "network_bandwidth": "[[calibration parameter]]"
     },
-    "workers": [
-      {
-        "hostname": "worker1",
+    "workers": {
+     "worker1":{
         "speed": "[[calibration parameter]]",
         "num_cores": 2,
         "network_bandwidth": "[[calibration parameter]]"
       },
-      {
-        "hostname": "worker2",
+      "worker2":{
         "speed": "[[calibration parameter]]",
         "num_cores": 2,
         "network_bandwidth": "[[calibration parameter]]"
       }
-    ]
+    }
   },
   "workflow": {
     "file": "[[mandatory config]]",
@@ -28,7 +26,7 @@
       "[[placeholder]]"
     ],
     "ongoing_tasks": [
-      {"task": "[[placeholder]]", "worker":  "[[placeholder]]", "how_far_back":  25.0},
+      {"task": "[[placeholder]]", "worker":  "[[placeholder]]", "how_far_back":  "[[placeholder]]"}
     ],
     "interest_tasks": [
       "[[placeholder]]",

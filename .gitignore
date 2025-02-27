@@ -13,3 +13,4 @@ build/*
 *.idea
 *.bak
 cmake-build-debug
+*.pyc
