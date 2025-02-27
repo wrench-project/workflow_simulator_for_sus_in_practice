@@ -47,14 +47,11 @@ void startServices(nlohmann::json platform_spec,
 
 int main(int argc, char** argv) {
 
-    std::cerr << "HERE\n";
     // Declaration of the top-level WRENCH simulation object
     simulation = wrench::Simulation::createSimulation();
-    std::cerr << "INIT:\n";
 
     // Initialization of the simulation
     simulation->init(&argc, argv);
-    std::cerr << "HERE\n";
 
     std::string json_input_string;
     nlohmann::json json_input;
