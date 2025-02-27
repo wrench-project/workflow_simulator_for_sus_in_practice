@@ -1,4 +1,4 @@
-#/usr/env python
+#!/usr/bin/env python
 import simcal as sc
 import copy
 import json
