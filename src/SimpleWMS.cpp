@@ -112,7 +112,7 @@ void SimpleWMS::processEventStandardJobFailure(const std::shared_ptr<wrench::Sta
 
 void SimpleWMS::startOngoingTasks() const {
     double last_task_submit_date;
-    for (ssize_t task_index = 0; task_index < _ongoing_tasks.size(); ++task_index) {
+    for (size_t task_index = 0; task_index < _ongoing_tasks.size(); ++task_index) {
         auto ongoing_task = _ongoing_tasks.at(task_index);
         const auto how_far_back = std::get<0>(ongoing_task);
         auto cs = std::get<1>(ongoing_task);
