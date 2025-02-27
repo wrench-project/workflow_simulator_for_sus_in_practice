@@ -1,3 +1,4 @@
+#/usr/env python
 import simcal as sc
 import copy
 import json
