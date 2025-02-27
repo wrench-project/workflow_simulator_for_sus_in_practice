@@ -15,7 +15,7 @@ std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*> PlatformCreator::create_wms
     auto wms_disk = wms_host->add_disk("wms_disk",
                                           disk_read_bandwidth,
                                           disk_write_bandwidth);
-    wms_disk->set_property("size", "5000EiB");
+    wms_disk->set_property("size", "5000PiB");
     wms_disk->set_property("mount", "/");
 
     const std::string link_name = "wms_link";

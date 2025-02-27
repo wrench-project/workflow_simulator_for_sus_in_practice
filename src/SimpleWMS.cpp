@@ -76,7 +76,7 @@ int SimpleWMS::main() {
     }
 
     // Pretty wild
-    wrench::Simulation::sleep(0.00001);
+//    wrench::Simulation::sleep(0.00001);
     return 0;
 }
 
