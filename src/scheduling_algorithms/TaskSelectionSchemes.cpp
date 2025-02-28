@@ -45,7 +45,7 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
 
     _task_selection_schemes["most_data"] = [](const std::shared_ptr<wrench::WorkflowTask> &a,
                                                   const std::shared_ptr<wrench::WorkflowTask> &b) -> bool {
-        double a_bytes = 0.0, b_bytes = 0.0;
+        sg_size_t a_bytes = 0.0, b_bytes = 0.0;
         for (auto const &f : a->getInputFiles()) {
             a_bytes += f->getSize();
         }
@@ -64,7 +64,7 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
 
     _task_selection_schemes["least_data"] = [](const std::shared_ptr<wrench::WorkflowTask> &a,
                                                    const std::shared_ptr<wrench::WorkflowTask> &b) -> bool {
-        double a_bytes = 0.0, b_bytes = 0.0;
+        sg_size_t a_bytes = 0.0, b_bytes = 0.0;
         for (auto const &f : a->getInputFiles()) {
             a_bytes += f->getSize();
         }
