@@ -8,8 +8,8 @@ directory for a sample invocation.
 
 ### Prerequisites and Dependencies
 
-- [SimGrid](https://framagit.org/simgrid/simgrid): `master` branch (commit tag: ab006ff8ec8cd0088efa31fd729c048706bf37b8)
-- [FSMod](https://github.com/simgrid/file-system-module): `master` branch (commit tag: 744d760d963d721578172483fd7e55bede23ae32)
+- [SimGrid](https://framagit.org/simgrid/simgrid): `master` branch (commit tag: `ab006ff8ec8cd0088efa31fd729c048706bf37b8`)
+- [FSMod](https://github.com/simgrid/file-system-module): `master` branch (commit tag: `744d760d963d721578172483fd7e55bede23ae32`)
 - [WRENCH](https://github.com/wrench-project/wrench): `simgrid_master` branch
 
 
