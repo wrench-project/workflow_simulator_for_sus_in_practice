@@ -33,6 +33,8 @@ public:
     std::vector<std::tuple<double, std::shared_ptr<wrench::WorkflowTask>, std::shared_ptr<
                                wrench::BareMetalComputeService>>> _completed_tasks;
 
+    double _time_origin = 0;
+
 private:
     int main() override;
     void processEventStandardJobCompletion(const std::shared_ptr<wrench::StandardJobCompletedEvent>& event) override;
@@ -49,9 +51,6 @@ private:
     std::shared_ptr<wrench::JobManager> _job_manager;
 
     bool _stop_simulation = false;
-
-
-    double _time_origin = 0;
 };
 
 #endif //MY_SIMPLEWMS_H

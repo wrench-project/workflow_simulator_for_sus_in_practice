@@ -166,7 +166,7 @@ int main(int argc, char** argv) {
     output_json["simulation_time"] = ((static_cast<double>(end_sim.tv_sec) * 1000000 + end_sim.tv_usec) -
         (static_cast<double>(begin_sim.tv_sec) * 1000000 +
             begin_sim.tv_usec)) / 1000000.0;
-    output_json["finish_date"] = wrench::Simulation::getCurrentSimulatedDate();
+    output_json["finish_date"] = wrench::Simulation::getCurrentSimulatedDate() - wms->_time_origin;
     nlohmann::json task_completion_arrays = nlohmann::json::array();
     for (auto const &task_completion : wms->_completed_tasks) {
         task_completion_arrays.push_back({
