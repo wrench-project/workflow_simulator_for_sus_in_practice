@@ -31,22 +31,21 @@ class Simulator(sc.Simulator):
 
 		return merged
 	def exec(self,json_args,env):
-		print(json_args)
-		output = env.bash(self.simulator_path,json.dumps(json_args))
+		output = env.bash(self.simulator_path,("--json_input",json.dumps(json_args)))
 		try:
-			json_output=json.loads(output)
+			json_output=json.loads(output[0])
 		except:
 			if "parse_error" in self.verbosity:
 				print(json_args,file=sys.stderr)
 				print(output,file=sys.stderr)
 			raise
-		if output[1] and "sim_error" in self.verbosity:
+		if len(output[1].split("\n"))>3 and "sim_error" in self.verbosity:
 			print(json_args,file=sys.stderr)
 			print(output,file=sys.stderr)
 		return json.loads(output[0])
 
 def _exec(simulator: Simulator, alg,state,stoptime):
-	return args, simulator.supercall({"state":state,"alg":alg},stoptime)
+	return alg, simulator.supercall({"state":state,"alg":alg},stoptime)
 	
 class SchedulingSimulator(Simulator):
 	def __init__(self,simulator_path,json_template,calibration,algs,metric,coordinator,verbosity = None):
@@ -67,13 +66,13 @@ class SchedulingSimulator(Simulator):
 		output=self.exec(json_args,env)
 		return self.metric(output)
 	def supercall(self, args: Any, stoptime: int | float | None = None) -> str:
-		super().__call__(args,stoptime)
+		return super().__call__(args,stoptime)
 	def __call__(self, args: Any, stoptime: int | float | None = None) -> str:
 		best=None
 		bestScore=None
 		for alg in self.algs.asObj():
 			self.coordinator.allocate(_exec, (simulator, alg, args, stoptime))
-			results = coordinator.collect()
+			results = self.coordinator.collect()
 			for current, score in results:
 				if score is None:
 					continue
@@ -82,7 +81,7 @@ class SchedulingSimulator(Simulator):
 					bestScore=score
 				elif  score==bestScore:
 					best.append(alg)
-		results = coordinator.await_all()
+		results = self.coordinator.await_all()
 		for current, score in results:
 			if score is None:
 				continue
@@ -120,7 +119,7 @@ if __name__ == "__main__":
 	
 	try:
 		sub=sys.argv[1].lower()
-		if "scheduling".startswith(sub):
+		if "scheduling".startswith(sub) or sub == "schedule":
 			sys.argv[0]+=" "+sys.argv[1]
 			del sys.argv[1]
 			parser = argparse.ArgumentParser(description="Simulation Argument Parser")

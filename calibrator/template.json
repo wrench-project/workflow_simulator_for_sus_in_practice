@@ -23,14 +23,10 @@
     "file": "[[mandatory config]]",
     "reference_flops": "1f",
     "done_tasks": [
-      "[[placeholder]]"
     ],
     "ongoing_tasks": [
-      {"task": "[[placeholder]]", "worker":  "[[placeholder]]", "how_far_back":  "[[placeholder]]"}
-    ],
+      ],
     "interest_tasks": [
-      "[[placeholder]]",
-      "[[placeholder]]"
     ]
   },
   "scheduling": {

@@ -28,6 +28,7 @@ void startServices(nlohmann::json platform_spec,
                    std::shared_ptr<wrench::SimpleStorageService>& storage_service) {
     for (auto& [hostname, worker_spec] : platform_spec["workers"].items()) {
         //std::string hostname = worker_spec["hostname"];
+
         auto cs = simulation->add(
             new wrench::BareMetalComputeService(
                 hostname, {hostname},

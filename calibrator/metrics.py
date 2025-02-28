@@ -1,2 +1,2 @@
 def makespan(json):
-	return json["makespan"]
+	return json["finish_date"]
