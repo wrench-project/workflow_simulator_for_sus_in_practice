@@ -167,15 +167,21 @@ int main(int argc, char** argv) {
         (static_cast<double>(begin_sim.tv_sec) * 1000000 +
             begin_sim.tv_usec)) / 1000000.0;
     output_json["finish_date"] = wrench::Simulation::getCurrentSimulatedDate() - wms->_time_origin;
-    nlohmann::json task_completion_arrays = nlohmann::json::array();
+    nlohmann::json task_completion_dict = nlohmann::json::object();
     for (auto const &task_completion : wms->_completed_tasks) {
-        task_completion_arrays.push_back({
-            {"date", std::get<0>(task_completion)},
-            {"task",std::get<1>(task_completion)->getID()},
-            {"worker", std::get<2>(task_completion)->hostname}
-        });
+        nlohmann::json task_dict = nlohmann::json::object();
+        task_dict["start_date"] = std::get<0>(task_completion);
+        task_dict["end_date"] = std::get<1>(task_completion);
+        task_dict["worker"] = std::get<3>(task_completion)->hostname;
+        task_completion_dict[std::get<2>(task_completion)->getID()] = task_dict;
+        // .push_back({
+        //     {"start_date", std::get<0>(task_completion)},
+        //     {"end_date", std::get<1>(task_completion)},
+        //     {"task",std::get<2>(task_completion)->getID()},
+        //     {"worker", std::get<3>(task_completion)->hostname}
+        // });
     }
-    output_json["task_completions"] = task_completion_arrays;
+    output_json["task_completions"] = task_completion_dict;
     std::cout << output_json.dump() << std::endl;
 
     exit(0);

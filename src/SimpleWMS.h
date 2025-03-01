@@ -30,8 +30,10 @@ public:
 
     double getTimeOrigin() const { return _time_origin; }
 
-    std::vector<std::tuple<double, std::shared_ptr<wrench::WorkflowTask>, std::shared_ptr<
-                               wrench::BareMetalComputeService>>> _completed_tasks;
+    std::vector<std::tuple<double,
+                           double,
+                           std::shared_ptr<wrench::WorkflowTask>,
+                           std::shared_ptr<wrench::BareMetalComputeService>>> _completed_tasks;
 
     double _time_origin = 0;
 
@@ -44,7 +46,8 @@ private:
     std::shared_ptr<wrench::SimpleStorageService> _storage_service;
     std::set<std::shared_ptr<wrench::BareMetalComputeService>> _compute_services;
     std::shared_ptr<wrench::Workflow> _workflow;
-    std::vector<std::tuple<double, std::shared_ptr<wrench::BareMetalComputeService>, std::shared_ptr<wrench::WorkflowTask>>> _ongoing_tasks;
+    std::vector<std::tuple<double, std::shared_ptr<wrench::BareMetalComputeService>, std::shared_ptr<
+                               wrench::WorkflowTask>>> _ongoing_tasks;
     std::set<std::shared_ptr<wrench::WorkflowTask>> _tasks_of_interest;
     SimpleStandardJobScheduler* _scheduler;
 

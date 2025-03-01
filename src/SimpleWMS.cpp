@@ -76,7 +76,7 @@ int SimpleWMS::main() {
     }
 
     // Pretty wild
-//    wrench::Simulation::sleep(0.00001);
+    //    wrench::Simulation::sleep(0.00001);
     return 0;
 }
 
@@ -90,14 +90,24 @@ void SimpleWMS::processEventStandardJobCompletion(const std::shared_ptr<wrench::
     _scheduler->_idle_cores_map[std::dynamic_pointer_cast<wrench::BareMetalComputeService>(event->compute_service)] +=
         task->getNumCoresAllocated();
 
-    _completed_tasks.emplace_back(wrench::Simulation::getCurrentSimulatedDate() - _time_origin, task, cs);
 
     if (_tasks_of_interest.empty()) {
-        return;
-    } else {
+        _completed_tasks.emplace_back(
+            task->getExecutionHistory().top().read_input_start - _time_origin,
+            task->getExecutionHistory().top().write_output_end - _time_origin,
+            task,
+            cs);
+    }
+    else {
         if (_tasks_of_interest.find(task) != _tasks_of_interest.end()) {
+            _completed_tasks.emplace_back(
+                task->getExecutionHistory().top().task_start - _time_origin,
+                task->getExecutionHistory().top().task_end - _time_origin,
+                task,
+                cs);
             _tasks_of_interest.erase(task);
-        } else {
+        }
+        else {
             return;
         }
         if (_tasks_of_interest.empty()) {
