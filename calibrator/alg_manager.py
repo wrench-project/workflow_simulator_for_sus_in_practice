@@ -10,7 +10,7 @@ class SchedulingAlg(object):
 		self.num_cores_selection_scheme=num_cores_selection_scheme
 		
 	def modifyJSON(self,json):
-		return _modifyJSON(json,self)
+		return modify_JSON_with_alg(json,self)
 		
 	def asDict(self):
 		return{

@@ -114,31 +114,35 @@ class CalibrationSimulator(Simulator):
 	def dictToTagged(self,calibration,subkey=None):
 		if not subkey:
 			subkey=[]
-		params=[]
+		params={}
 		for key, value in calibration.items():
 			if isinstance(value, dict):
-				params += self.dictToTagged(value,subkey+[key]) 
+				params |= self.dictToTagged(value,subkey+[key]) 
 			else:
 				param=sc.parameter.Base()
-				param.set_custom_data(subkey+[key])
+				json_type=type(value)
+				param.set_custom_data({"json_type":json_type,"key":subkey+[key]})
 				param_v=sc.parameter.Value(None,value,param)
-				params.append(param_v)
+				params[" ".join(subkey+[key])+ " "+str(value)]=(param_v)
 		return params
-	def modifyJSON_tagged(json_template,tagged_args):
+	def modifyJSON_tagged(self,json_template,tagged_args):
+		json_copy = copy.deepcopy(json_template)
 		for parameter in tagged_args:
-			metadata = calibration[parameter].get_parameter().get_custom_data()
-			tmp_object = copy.deepcopy(json_template)
+			tmp_object=json_copy
+			metadata = tagged_args[parameter].get_parameter().get_custom_data()
+			json_type=metadata["json_type"]
+			metadata=metadata["key"]
 			for item in metadata[0:-1]:
 				if item not in tmp_object.keys():
 					sys.stderr.write(
 						f"Raising an exception for 'cannot set parameter values for {metadata}' but that won't be propagated for now")
 					raise Exception(f"Internal error: cannot set parameter values for {metadata}")
 				tmp_object = tmp_object[item]
-			tmp_object[metadata[-1]] = str(calibration[parameter])
-		return tmp_object
+			tmp_object[metadata[-1]] = json_type(tagged_args[parameter])
+		return json_copy
 	def run(self,env,args):
 		losses=[]
-		for experiment in experiments:
+		for experiment in self.experiments:
 			json_args=self.alg.modifyJSON(self.json_template)
 			json_args=self.modifyJSON(json_args,experiment.experiment_params)
 			json_args=self.modifyJSON_tagged(json_args,args)
@@ -280,11 +284,12 @@ if __name__ == "__main__":
 					else:
 						experiments.append(experiment)
 				for i in range(len(experiments)):
-					experiments[i]=experiments[i]
+					experiments[i]=Experiment(experiments[i])
 				
 				alg=SchedulingAlg(args.task_selection_scheme,args.worker_selection_scheme,args.num_cores_selection_scheme)	
 				simulator=CalibrationSimulator(args.simulator_path,template,experiments,alg,loss,verbosity = verbosity)
-				ret=simulator(calibration)
+				params=simulator.dictToTagged(calibration)
+				ret=simulator(params)
 				print(ret)
 			except ParseException:
 				pass
