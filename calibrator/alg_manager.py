@@ -47,9 +47,9 @@ class AlgManager (object):
 			yield alg
 			
 	def modifyJSON(self,json,args : dict[str,str] | SchedulingAlg | tuple[str,str,str]):
-		return _modifyJSON(json,args)
+		return modify_JSON_with_alg(json,args)
 
-def _modifyJSON(json,args : dict[str,str] | SchedulingAlg | tuple[str,str,str]):
+def modify_JSON_with_alg(json,args : dict[str,str] | SchedulingAlg | tuple[str,str,str]):
 	json=deepcopy(json)
 	argTuple=args
 	if isinstance(args, dict):

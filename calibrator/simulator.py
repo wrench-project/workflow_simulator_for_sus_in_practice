@@ -92,15 +92,51 @@ class SchedulingSimulator(Simulator):
 				best.append(alg)
 				
 		return best
+class Experiment:
+	def __init__(self,experiment_params,ground_truth):
+		self.experiment_params=experiment_params
+		self.ground_truth=ground_truth
 		
 class CalibrationSimulator(Simulator):
-	def __init__(self,simulator_path,json_template,verbosity = None):
+	def __init__(self,simulator_path,json_template,experiments,loss ,verbosity = None):
 		super().__init__(simulator_path,json_template,verbosity)
-	
+		self.experiments=experiments
+		self.loss=loss
+	def dictToTagged(self,calibration,subkey=None):
+		if not subkey:
+			subkey=[]
+		params=[]
+		for key, value in calibration.items():
+			if isinstance(value, dict):
+				params += self.dictToTagged(value,subkey+[key]) 
+			else:
+				param=sc.parameter.Base()
+				param.set_custom_data(subkey+[key])
+				param_v=sc.parameter.Value(None,value,param)
+				params.append(param_v)
+		return params
+	def modifyJSON_tagged(json_template,tagged_args):
+		for parameter in tagged_args:
+			metadata = calibration[parameter].get_parameter().get_custom_data()
+			tmp_object = copy.deepcopy(json_template)
+			for item in metadata[0:-1]:
+				if item not in tmp_object.keys():
+					sys.stderr.write(
+						f"Raising an exception for 'cannot set parameter values for {metadata}' but that won't be propagated for now")
+					raise Exception(f"Internal error: cannot set parameter values for {metadata}")
+				tmp_object = tmp_object[item]
+			tmp_object[metadata[-1]] = str(calibration[parameter])
+		return tmp_object
 	def run(self,env,args):
-		pass
+		losses=[]
+		for experiment in experiments:
+			json_args=self.modifyJSON(experiment.experiment_params,self.json_template)
+			json_args=self.modifyJSON_tagged(json_args,args)
+			output=self.exec(json_args,env)
+			losses.append(self.loss.loss(output,experiment.ground_truth))
+		return self.loss.aggregator(losses)
 		
-		
+# probably optional with calibrator, just replace losses and experiments
 class ErrorCorrectionSimulator(Simulator):
 	def __init__(self,simulator_path,json_template,verbosity = None):
 		super().__init__(simulator_path,json_template,verbosity)
