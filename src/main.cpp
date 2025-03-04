@@ -174,12 +174,6 @@ int main(int argc, char** argv) {
         task_dict["end_date"] = std::get<1>(task_completion);
         task_dict["worker"] = std::get<3>(task_completion)->hostname;
         task_completion_dict[std::get<2>(task_completion)->getID()] = task_dict;
-        // .push_back({
-        //     {"start_date", std::get<0>(task_completion)},
-        //     {"end_date", std::get<1>(task_completion)},
-        //     {"task",std::get<2>(task_completion)->getID()},
-        //     {"worker", std::get<3>(task_completion)->hostname}
-        // });
     }
     output_json["task_completions"] = task_completion_dict;
     std::cout << output_json.dump() << std::endl;

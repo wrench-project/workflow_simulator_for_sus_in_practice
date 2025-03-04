@@ -1,0 +1,26 @@
+sudo apt-get update
+sudo apt-get install -y docker.io
+sudo usermod -aG docker $USER
+(log back out and back in so that docker's group takes effect)
+
+Install all Boost
+sudo apt install libboost-all-dev
+    
+Install SimGrid:
+cd /home/cc; git clone https://framagit.org/simgrid/simgrid.git && cd simgrid && git checkout ab006ff8ec8cd0088efa31fd729c048706bf37b8 && mkdir build && cd build && cmake .. && make -j`nproc` && sudo make install && cd /home/cc
+
+Install FSMod:
+cd /home/cc; git clone https://github.com/simgrid/file-system-module.git && cd file-system-module && git checkout 744d760d963d721578172483fd7e55bede23ae32 && mkdir build && cd build && cmake .. && make -j`nproc` && sudo make install && cd /home/cc
+
+Install JSON stuff:
+cd /home/cc; wget https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.tar.gz && tar -xf v3.11.3.tar.gz && cd json-3.11.3 && mkdir build && cd build && cmake .. && make -j`nproc` && sudo make install && cd ../.. && rm -f v3.11.3.tar.gz
+
+Install WRENCH:
+cd /home/cc; git clone https://github.com/wrench-project/wrench.git && cd wrench && git checkout simgrid_master && mkdir build && cd build && cmake .. && make -j `nproc` && sudo make install && cd /home/cc
+
+Install Simulator:
+cd /home/cc; git clone https://github.com/wrench-project/workflow_simulator_for_sus_in_practice.git && cd workflow_simulator_for_sus_in_practice && mkdir build && cd build && cmake .. && make -j`nproc` && sudo make install && cd /home/cc
+
+
+
+
