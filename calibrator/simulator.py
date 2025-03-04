@@ -283,7 +283,7 @@ if __name__ == "__main__":
 					experiments[i]=experiments[i]
 				
 				alg=SchedulingAlg(args.task_selection_scheme,args.worker_selection_scheme,args.num_cores_selection_scheme)	
-				simulator=CalibrationSimulator(args.simulator_path,template,experiments,loss,alg,verbosity = verbosity)
+				simulator=CalibrationSimulator(args.simulator_path,template,experiments,alg,loss,verbosity = verbosity)
 				ret=simulator(calibration)
 				print(ret)
 			except ParseException:
