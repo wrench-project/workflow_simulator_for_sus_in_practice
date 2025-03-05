@@ -36,7 +36,7 @@ class Simulator(sc.Simulator):
 			worker["active"]=False
 		json_file=load_json(json_args["workflow"]["file"])
 		for machine in json_file["workflow"]["execution"]["machines"]:
-			json_args["platform"]["workers"][machine["nodeName"]["active"]=True
+			json_args["platform"]["workers"][machine["nodeName"]]["active"]=True
 		output = env.bash(self.simulator_path,("--json_input",json.dumps(json_args)))
 		try:
 			json_output=json.loads(output[0])
