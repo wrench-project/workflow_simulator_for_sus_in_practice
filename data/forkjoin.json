@@ -470,7 +470,7 @@
             ],
             "machines": [
                 {
-                    "nodeName": "ubuntu",
+                    "nodeName": "worker1",
                     "system": "linux",
                     "architecture": "x86_64",
                     "memoryInBytes": 196483612,
