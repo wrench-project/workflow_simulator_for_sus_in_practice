@@ -6,7 +6,7 @@ class Calibrate:
 	calibrators = { 
 		"random":sc.calibrators.Random(seed=0),
 		"gradient":sc.calibrators.GradientDescent(1,1,seed=0,early_reject_loss=None),#random hyperparameters
-		"genetic":sc.calibrators.Genetic(1000,100,0.1,0.1,fitness_noise=0,annealing=True,seed=0,elites=10):,#random hyperparameters
+		"genetic":sc.calibrators.Genetic(1000,100,0.1,0.1,fitness_noise=0,annealing=True,seed=0,elites=10),#random hyperparameters
 		"grid":sc.calibrators.Grid(),
 		"skopt.gp":sc.calibrators.ScikitOptimizer(1000,"GP",seed=0),
 		"skopt.gbrt":sc.calibrators.ScikitOptimizer(1000,"GBRT",seed=0),
