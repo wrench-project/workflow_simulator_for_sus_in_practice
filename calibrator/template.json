@@ -8,11 +8,13 @@
     },
     "workers": {
      "worker1":{
+        "active":[[json driven]],
         "speed": "[[calibration parameter]]",
         "num_cores": 2,
         "network_bandwidth": "[[calibration parameter]]"
       },
       "worker2":{
+        "active":[[json driven]],
         "speed": "[[calibration parameter]]",
         "num_cores": 2,
         "network_bandwidth": "[[calibration parameter]]"

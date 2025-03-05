@@ -4,6 +4,8 @@ import copy
 import json
 from typing import Any
 from alg_manager import *
+import re
+from util import *
 # There are 3 different simulators for the 3 different situations we will run them in
 # SchedulingSimulator is for making scheduling decisions.  It is given the state parts of the json (ie the "workflow" sub object) at each run and is initialized with a calibration and a set of scheduling algorithms, and a metric to use.  Run will then run the simulator on that state with that calibration for each algorithm and return the algorithm(s) with the lowest score according to the metric.  THIS VERSION IS NOT INTENDED TO BE RAN WITH SIMCAL
 
@@ -30,6 +32,11 @@ class Simulator(sc.Simulator):
 
 		return merged
 	def exec(self,json_args,env):
+		for worker in json_args["platform"]["workers"].values():
+			worker["active"]=False
+		json_file=load_json(json_args["workflow"]["file"])
+		for machine in json_file["workflow"]["execution"]["machines"]:
+			json_args["platform"]["workers"][machine["nodeName"]["active"]=True
 		output = env.bash(self.simulator_path,("--json_input",json.dumps(json_args)))
 		try:
 			json_output=json.loads(output[0])
@@ -101,8 +108,7 @@ class Experiment:
 	
 	def initFromFile(self, file):
 		self.experiment_params = {"workflow": {"file": file,"done_tasks": [],"ongoing_tasks": [],"interest_tasks": []}}
-		with open(file) as raw_file:
-			json_file=json.load(raw_file)
+		json_file=load_json(file)
 		self.ground_truth = json_file["workflow"]["execution"]
 	
 class CalibrationSimulator(Simulator):
@@ -125,20 +131,24 @@ class CalibrationSimulator(Simulator):
 				param_v=sc.parameter.Value(None,value,param)
 				params[" ".join(subkey+[key])+ " "+str(value)]=(param_v)
 		return params
+	def _modifyJSON_tagged_recursive(self,json_copy,metadata,parameter):
+		pattern = re.compile(metadata[0])
+		for key in json_copy:
+			if pattern.match(key):
+				matched=True
+				if len(metadata)>1:
+					self._modifyJSON_tagged_recursive(json_copy[key],metadata[1:],parameter)
+				else:
+					metadata = parameter.get_parameter().get_custom_data()
+					json_type=metadata["json_type"]
+					json_copy[key] = json_type(parameter)
+
 	def modifyJSON_tagged(self,json_template,tagged_args):
 		json_copy = copy.deepcopy(json_template)
 		for parameter in tagged_args:
-			tmp_object=json_copy
 			metadata = tagged_args[parameter].get_parameter().get_custom_data()
-			json_type=metadata["json_type"]
 			metadata=metadata["key"]
-			for item in metadata[0:-1]:
-				if item not in tmp_object.keys():
-					sys.stderr.write(
-						f"Raising an exception for 'cannot set parameter values for {metadata}' but that won't be propagated for now")
-					raise Exception(f"Internal error: cannot set parameter values for {metadata}")
-				tmp_object = tmp_object[item]
-			tmp_object[metadata[-1]] = json_type(tagged_args[parameter])
+			self._modifyJSON_tagged_recursive(json_copy,metadata,tagged_args[parameter])
 		return json_copy
 	def run(self,env,args):
 		losses=[]
@@ -146,6 +156,7 @@ class CalibrationSimulator(Simulator):
 			json_args=self.alg.modifyJSON(self.json_template)
 			json_args=self.modifyJSON(json_args,experiment.experiment_params)
 			json_args=self.modifyJSON_tagged(json_args,args)
+			#print(json_args)
 			output=self.exec(json_args,env)
 			losses.append(self.loss.loss(output,experiment.ground_truth))
 		return self.loss.aggregator(losses)
@@ -196,8 +207,7 @@ if __name__ == "__main__":
 				else:
 					state={}	
 				try: 
-					with open(args.template) as template_file:
-							template=json.load(template_file)
+					template=load_json(args.template)
 				except FileNotFoundError:
 					try:
 						template=json.loads(args.template)
@@ -251,8 +261,7 @@ if __name__ == "__main__":
 					calibration={}
 				
 				try: 
-					with open(args.template) as template_file:
-							template=json.load(template_file)
+					template=args.template(args.template)
 				except FileNotFoundError:
 					try:
 						template=json.loads(args.template)
