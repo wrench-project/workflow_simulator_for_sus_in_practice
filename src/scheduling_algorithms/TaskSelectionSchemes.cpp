@@ -49,7 +49,14 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
         for (auto const &f : a->getInputFiles()) {
             a_bytes += f->getSize();
         }
+        for (auto const &f : a->getOutputFiles()) {
+            a_bytes += f->getSize();
+        }
+
         for (auto const &f : b->getInputFiles()) {
+            b_bytes += f->getSize();
+        }
+        for (auto const &f : b->getOutputFiles()) {
             b_bytes += f->getSize();
         }
 
@@ -68,7 +75,14 @@ void SimpleStandardJobScheduler::initTaskPrioritySchemes() {
         for (auto const &f : a->getInputFiles()) {
             a_bytes += f->getSize();
         }
+        for (auto const &f : a->getOutputFiles()) {
+            a_bytes += f->getSize();
+        }
+
         for (auto const &f : b->getInputFiles()) {
+            b_bytes += f->getSize();
+        }
+        for (auto const &f : b->getOutputFiles()) {
             b_bytes += f->getSize();
         }
 
