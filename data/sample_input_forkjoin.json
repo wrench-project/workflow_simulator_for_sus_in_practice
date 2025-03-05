@@ -8,11 +8,13 @@
     },
     "workers": {
       "worker1":{
+        "active": true,
         "speed": "1f",
         "num_cores": 2,
         "network_bandwidth": "10Gbps"
       },
       "worker2":{
+        "active": true,
         "speed": "1f",
         "num_cores": 2,
         "network_bandwidth": "10Gbps"

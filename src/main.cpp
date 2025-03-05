@@ -29,6 +29,9 @@ void startServices(nlohmann::json platform_spec,
     for (auto& [hostname, worker_spec] : platform_spec["workers"].items()) {
         //std::string hostname = worker_spec["hostname"];
 
+        if (not worker_spec["active"].get<bool>())
+            continue;
+
         auto cs = simulation->add(
             new wrench::BareMetalComputeService(
                 hostname, {hostname},
@@ -106,25 +109,32 @@ int main(int argc, char** argv) {
     std::shared_ptr<wrench::SimpleStorageService> storage_service;
     startServices(json_input["platform"], compute_services, storage_service);
 
+
     // Create a convenient map of hostname to compute service
     std::map<std::string, std::shared_ptr<wrench::BareMetalComputeService>> compute_services_map;
     for (auto const& service : compute_services) {
         compute_services_map[service->getHostname()] = service;
     }
 
+    std::cerr << "CREATING THE WORKFLOW\n";
+
     // Create the workflow
     auto workflow = WorkflowCreator::create_workflow(json_input["workflow"]);
+    std::cerr << "FOO\n";
 
     // Stage all input files on the Storage Service
     for (const auto& f : workflow->getInputFiles()) {
         storage_service->createFile(f);
     }
+    std::cerr << "FOO\n";
 
     // Create a sorted (by "how far back in the past") vector of tuples of (how far back, Task) for
     // the ongoing tasks
     auto ongoing_tasks = WorkflowCreator::processOngoingTasks(json_input["workflow"], workflow, compute_services_map);
+    std::cerr << "FOO\n";
 
     auto tasks_of_interest = WorkflowCreator::processTasksOfInterest(json_input["workflow"], workflow);
+    std::cerr << "FOO\n";
 
     // Configure the scheduler
     scheduler->setTaskSelectionScheme(json_input["scheduling"]["task_selection_scheme"]);
@@ -135,6 +145,8 @@ int main(int argc, char** argv) {
     // Compute metrics useful for some scheduling algorithms
     scheduler->computeBottomLevels(workflow);
     scheduler->computeNumbersOfChildren(workflow);
+
+    std::cerr << "FOO\n";
 
     // Create the WMS
     auto wms = simulation->add(

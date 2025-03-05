@@ -28,7 +28,9 @@ std::vector<std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*>> PlatformCreato
     std::vector<std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*>> workers;
 
     for (auto& [hostname, worker_spec] : _platform_spec["workers"].items()) {
-        //const std::string hostname = worker_spec["hostname"];
+        if (not worker_spec["active"].get<bool>())
+            continue;
+
         const std::string speed = worker_spec["speed"];
         auto worker_host = root->add_host(hostname, speed);
         worker_host->set_core_count(worker_spec["num_cores"].get<int>());
@@ -36,6 +38,7 @@ std::vector<std::tuple<simgrid::s4u::Link*, simgrid::s4u::Host*>> PlatformCreato
         std::string link_bandwidth = worker_spec["network_bandwidth"];
         auto worker_link = root->add_link(link_name, link_bandwidth);
         workers.emplace_back(worker_link, worker_host);
+
     }
     return workers;
 }
