@@ -392,9 +392,9 @@ if __name__ == "__main__":
 						synth_file=json.dump(json_file)
 
 				for exp in experiments:
-					self.coordinator.allocate(synthetic_run, (simulator, alg, state, calibration))
-					results = self.coordinator.collect()
-				results = self.coordinator.await_all()
+					coordinator.allocate(synthetic_run, (simulator, alg, state, calibration))
+					results = coordinator.collect()
+				results = coordinator.await_all()
 			except ParseException:
 				pass
 			except Exception:
