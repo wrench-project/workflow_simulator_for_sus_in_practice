@@ -390,10 +390,7 @@ if __name__ == "__main__":
 							task["machines"]=[output["task_completions"][task["id"]]["worker"]]
 					with open(output_dir+"/"+json_args["workflow"]["file"].split("/")[-1]) as synth_file:
 						synth_file=json.dump(json_file)
-					
-				alg=args["alg"]
-				state=args["state"]
-				
+
 				for exp in experiments:
 					self.coordinator.allocate(synthetic_run, (simulator, alg, state, calibration))
 					results = self.coordinator.collect()
