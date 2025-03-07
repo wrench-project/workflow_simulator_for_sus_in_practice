@@ -49,7 +49,7 @@ class Simulator(sc.Simulator):
 			print(json_args,file=sys.stderr)
 			print(output,file=sys.stderr)
 		return json.loads(output[0])
-	def run(self,json_args,env):
+	def run(self,env,json_args):
 		return self.exec(json_args,env)
 	def dictToTagged(self,calibration,subkey=None):
 		if not subkey:
