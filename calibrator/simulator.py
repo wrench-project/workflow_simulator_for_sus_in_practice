@@ -371,7 +371,7 @@ if __name__ == "__main__":
 				alg=SchedulingAlg(args.task_selection_scheme,args.worker_selection_scheme,args.num_cores_selection_scheme)	
 				simulator=Simulator(args.simulator_path,template,verbosity = verbosity)
 				def synthetic_run(sim,alg,state,cal,output_dir):
-					json_args=alg.modifyJSON(self.json_template)
+					json_args=alg.modifyJSON(template)
 					json_args=sim.modifyJSON(json_args,state)
 					json_args=sim.modifyJSON(json_args,self.calibration)
 					output=sim(json_args,env)
