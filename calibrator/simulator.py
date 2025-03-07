@@ -373,7 +373,7 @@ if __name__ == "__main__":
 				def synthetic_run(sim,alg,state,cal,output_dir):
 					json_args=alg.modifyJSON(self.json_template)
 					json_args=sim.modifyJSON(json_args,state)
-					json_args=self.modifyJSON(json_args,self.calibration)
+					json_args=sim.modifyJSON(json_args,self.calibration)
 					output=sim(json_args,env)
 					file="synthetic_"+json_args["workflow"]["file"]
 					json_file=load_json(file)
