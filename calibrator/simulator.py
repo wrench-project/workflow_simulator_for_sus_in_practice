@@ -374,7 +374,7 @@ if __name__ == "__main__":
 					json_args=alg.modifyJSON(template)
 					json_args=sim.modifyJSON(json_args,state)
 					json_args=sim.modifyJSON(json_args,cal)
-					output=sim(json_args,env)
+					output=sim(json_args)
 					file="synthetic_"+json_args["workflow"]["file"]
 					json_file=load_json(file)
 					file.replace("\\","/")
