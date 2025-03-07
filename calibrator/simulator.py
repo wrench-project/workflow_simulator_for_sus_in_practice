@@ -388,7 +388,7 @@ if __name__ == "__main__":
 						if task["id"] in output["task_completions"]:
 							task["runtimeInSeconds"]=output["task_completions"][task["id"]]["end_date"]-output["task_completions"][task["id"]]["start_date"]
 							task["machines"]=[output["task_completions"][task["id"]]["worker"]]
-					open (output_dir+"/"+json_args["workflow"]["file"].split("/")[-1]) as synth_file:
+					with open(output_dir+"/"+json_args["workflow"]["file"].split("/")[-1]) as synth_file:
 						synth_file=json.dump(json_file)
 					
 				alg=args["alg"]
