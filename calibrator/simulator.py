@@ -368,7 +368,7 @@ if __name__ == "__main__":
 						experiments.append(experiment)
 				for i in range(len(experiments)):
 					experiments[i]=Experiment(experiments[i])
-				algs=AlgManager(args.task_selection_schemes,args.worker_selection_schemes,args.num_cores_selection_schemes)
+				alg=SchedulingAlg(args.task_selection_scheme,args.worker_selection_scheme,args.num_cores_selection_scheme)	
 				simulator=Simulator(args.simulator_path,template,verbosity = verbosity)
 				def synthetic_run(sim,alg,state,cal,output_dir):
 					json_args=alg.modifyJSON(self.json_template)
