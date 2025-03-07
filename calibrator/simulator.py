@@ -49,7 +49,45 @@ class Simulator(sc.Simulator):
 			print(json_args,file=sys.stderr)
 			print(output,file=sys.stderr)
 		return json.loads(output[0])
-
+		
+	def dictToTagged(self,calibration,subkey=None):
+		if not subkey:
+			subkey=[]
+		params={}
+		for key, value in calibration.items():
+			if isinstance(value, dict):
+				params |= self.dictToTagged(value,subkey+[key]) 
+			else:
+				param=sc.parameter.Base()
+				json_type=type(value)
+				param.set_custom_data({"json_type":json_type,"key":subkey+[key]})
+				param_v=sc.parameter.Value(None,value,param)
+				params[" ".join(subkey+[key])+ " "+str(value)]=(param_v)
+		return params
+	def _modifyJSON_tagged_recursive(self,json_copy,metadata,parameter):
+		pattern = re.compile(metadata[0])
+		for key in json_copy:
+			if pattern.match(key):
+				matched=True
+				if len(metadata)>1:
+					self._modifyJSON_tagged_recursive(json_copy[key],metadata[1:],parameter)
+				else:
+					metadata = parameter.get_parameter().get_custom_data()
+					json_type=metadata["json_type"]
+					json_copy[key] = json_type(parameter)
+	def isSimcalCal(self,cal):
+		for key in cal:
+			if isInstance(sc.parameter.Base, cal[key]):
+				return True
+		return False
+		
+	def modifyJSON_tagged(self,json_template,tagged_args):
+		json_copy = copy.deepcopy(json_template)
+		for parameter in tagged_args:
+			metadata = tagged_args[parameter].get_parameter().get_custom_data()
+			metadata=metadata["key"]
+			self._modifyJSON_tagged_recursive(json_copy,metadata,tagged_args[parameter])
+		return json_copy
 def _exec(simulator: Simulator, alg,state,stoptime):
 	return alg, simulator.supercall({"state":state,"alg":alg},stoptime)
 	
@@ -64,15 +102,21 @@ class SchedulingSimulator(Simulator):
 			self.coordinator = sc.coordinators.Base()
 
 	def run(self,env,args):
+		
 		alg=args["alg"]
 		state=args["state"]
 		json_args=alg.modifyJSON(self.json_template)
 		json_args=self.modifyJSON(json_args,state)
-		json_args=self.modifyJSON(json_args,self.calibration)
+		if(self.isSimcalCal(self.calibration)):
+			json_args=self.modifyJSON_tagged(json_args,self.calibration)
+		else:
+			json_args=self.modifyJSON(json_args,self.calibration)
 		output=self.exec(json_args,env)
 		return self.metric(output)
+		
 	def supercall(self, args: Any, stoptime: int | float | None = None) -> str:
 		return super().__call__(args,stoptime)
+		
 	def __call__(self, args: Any, stoptime: int | float | None = None) -> str:
 		best=None
 		bestScore=None
@@ -117,39 +161,7 @@ class CalibrationSimulator(Simulator):
 		self.experiments=experiments
 		self.loss=loss
 		self.alg=alg
-	def dictToTagged(self,calibration,subkey=None):
-		if not subkey:
-			subkey=[]
-		params={}
-		for key, value in calibration.items():
-			if isinstance(value, dict):
-				params |= self.dictToTagged(value,subkey+[key]) 
-			else:
-				param=sc.parameter.Base()
-				json_type=type(value)
-				param.set_custom_data({"json_type":json_type,"key":subkey+[key]})
-				param_v=sc.parameter.Value(None,value,param)
-				params[" ".join(subkey+[key])+ " "+str(value)]=(param_v)
-		return params
-	def _modifyJSON_tagged_recursive(self,json_copy,metadata,parameter):
-		pattern = re.compile(metadata[0])
-		for key in json_copy:
-			if pattern.match(key):
-				matched=True
-				if len(metadata)>1:
-					self._modifyJSON_tagged_recursive(json_copy[key],metadata[1:],parameter)
-				else:
-					metadata = parameter.get_parameter().get_custom_data()
-					json_type=metadata["json_type"]
-					json_copy[key] = json_type(parameter)
-
-	def modifyJSON_tagged(self,json_template,tagged_args):
-		json_copy = copy.deepcopy(json_template)
-		for parameter in tagged_args:
-			metadata = tagged_args[parameter].get_parameter().get_custom_data()
-			metadata=metadata["key"]
-			self._modifyJSON_tagged_recursive(json_copy,metadata,tagged_args[parameter])
-		return json_copy
+	
 	def run(self,env,args):
 		losses=[]
 		for experiment in self.experiments:
@@ -306,8 +318,92 @@ if __name__ == "__main__":
 				print(traceback.format_exc())
 		elif "errorcorrection".startswith(sub) or "errorcorrection".startswith(sub) or sub == "ec":
 			print("error correction not yet implemented",file=sys.stderr)
+		elif "synthetic".startswith(sub):
+			sys.argv[0]+=" "+sys.argv[1]
+			del sys.argv[1]
+			parser = argparse.ArgumentParser(description="Simulation Argument Parser")
+			parser.add_argument("-c", "--calibration", type=str, help="Calibration JSON as string", required=False)
+			parser.add_argument("-s", "--state", type=str, help="State JSON as string", required=False)
+			parser.add_argument("-p", "--simulator_path", type=str, help="Path to the simulator", required=True)
+			parser.add_argument("-t", "--template", type=str, help="Template JSON as string", required=True)
+			parser.add_argument("-e", "--experiments", nargs='+', type=str, help="Path to workflow files to run for experiment", required=True)
+			parser.add_argument("-n", "--num_threads", type=int, help="Number of threads", required=False)
+			parser.add_argument("-tss", "--task_selection_scheme", type=str, help="Task selection scheme", required=True)
+			parser.add_argument("-wss", "--worker_selection_scheme", type=str, help="Worker selection scheme", required=True)
+			parser.add_argument("-nss", "--num_cores_selection_scheme", type=str, help="Number of cores selection scheme", required=True)
+			parser.add_argument("-o", "--output_dir", type=str, help="Directory to dump new synthetic files into", required=True)
+			parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode", required=False)
+			try:
+				args=parser.parse_args()
+				if(args.calibration):
+					calibration=json.loads(args.calibration)
+				else:
+					calibration={}
+				if(args.state is not None):
+					state=json.loads(args.state)
+				else:
+					state={}	
+				try: 
+					template=load_json(args.template)
+				except FileNotFoundError:
+					try:
+						template=json.loads(args.template)
+					except:
+						print("Template provided is not a path or a json object",file=sys.stderr)
+						raise
+				if not args.num_threads or args.num_threads==1:
+					coordinator=None
+				else:
+					from simcal.coordinators import ThreadPool
+					coordinator=ThreadPool(args.num_threads)
+				if args.verbose:
+					verbosity = ["sim_error","parse_error"]
+				else:
+					verbosity = []
+				experiments = []
+				for experiment in args.experiments:
+					if '*' in experiment or '?' in experiment:
+						experiments += glob(experiment)
+					else:
+						experiments.append(experiment)
+				for i in range(len(experiments)):
+					experiments[i]=Experiment(experiments[i])
+				algs=AlgManager(args.task_selection_schemes,args.worker_selection_schemes,args.num_cores_selection_schemes)
+				simulator=Simulator(args.simulator_path,template,verbosity = verbosity)
+				def synthetic_run(sim,alg,state,cal,output_dir):
+					json_args=alg.modifyJSON(self.json_template)
+					json_args=sim.modifyJSON(json_args,state)
+					json_args=self.modifyJSON(json_args,self.calibration)
+					output=sim(json_args,env)
+					file="synthetic_"+json_args["workflow"]["file"]
+					json_file=load_json(file)
+					file.replace("\\","/")
+					#replace content of json file
+					json_file["runtimeSystem"]["name"]="Synthetic"
+					json_file["runtimeSystem"]["version"]="1.0"
+					json_file["runtimeSystem"]["url"]=""
+					json_file["name"]="synthetic-"+json_file["name"]
+					json_file["workflow"]["execution"]["makespanInSeconds"]=output["finish_date"]
+					for task in json_file["workflow"]["execution"]["tasks"]:
+						if task["id"] in output["task_completions"]:
+							task["runtimeInSeconds"]=output["task_completions"][task["id"]]["end_date"]-output["task_completions"][task["id"]]["start_date"]
+							task["machines"]=[output["task_completions"][task["id"]]["worker"]]
+					open (output_dir+"/"+json_args["workflow"]["file"].split("/")[-1]) as synth_file:
+						synth_file=json.dump(json_file)
+					
+				alg=args["alg"]
+				state=args["state"]
+				
+				for exp in experiments:
+					self.coordinator.allocate(synthetic_run, (simulator, alg, state, calibration))
+					results = self.coordinator.collect()
+				results = self.coordinator.await_all()
+			except ParseException:
+				pass
+			except Exception:
+				print(traceback.format_exc())
 		else:
 			print(f"subcommand \"{sys.argv[1]}\" not recognized",file=sys.stderr)
 			raise
 	except Exception:
-		print(f"Usage: {sys.argv[0]} <scheduling | calibration | error_correction> ...\n\t Specify a sub command for the usage of that subcommand",file=sys.stderr)
+		print(f"Usage: {sys.argv[0]} <scheduling | calibration | error_correction | synthetic> ...\n\t Specify a sub command for the usage of that subcommand",file=sys.stderr)
