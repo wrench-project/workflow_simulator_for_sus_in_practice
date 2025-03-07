@@ -352,7 +352,7 @@ if __name__ == "__main__":
 						print("Template provided is not a path or a json object",file=sys.stderr)
 						raise
 				if not args.num_threads or args.num_threads==1:
-					coordinator=None
+					coordinator=sc.coordinators.Base()
 				else:
 					from simcal.coordinators import ThreadPool
 					coordinator=ThreadPool(args.num_threads)
