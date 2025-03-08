@@ -389,8 +389,9 @@ if __name__ == "__main__":
 					json_file["workflow"]["execution"]["makespanInSeconds"]=output["finish_date"]
 					for task in json_file["workflow"]["execution"]["tasks"]:
 						if task["id"] in output["task_completions"]:
-							task["runtimeInSeconds"]=output["task_completions"][task["id"]]["end_date"]-output["task_completions"][task["id"]]["start_date"]
-							task["machines"]=[output["task_completions"][task["id"]]["worker"]]
+							output_task=output["task_completions"][task["id"]]
+							task["runtimeInSeconds"]=output_task["end_date"]-output_task["start_date"]
+							task["machines"]=[output_task["worker"]]
 					with open(output_dir+"/synthetic_"+json_args["workflow"]["file"].split("/")[-1],'w') as synth_file:
 						json.dump(json_file,synth_file)
 
