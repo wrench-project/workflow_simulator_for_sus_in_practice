@@ -78,7 +78,7 @@ class Simulator(sc.Simulator):
 					json_copy[key] = json_type(parameter)
 	def isSimcalCal(self,cal):
 		for key in cal:
-			if isInstance(sc.parameter.Base, cal[key]):
+			if isinstance(cal[key],sc.parameter.Base):
 				return True
 		return False
 		
@@ -155,7 +155,8 @@ class Experiment:
 		self.experiment_params = {"workflow": {"file": file,"done_tasks": [],"ongoing_tasks": [],"interest_tasks": []}}
 		json_file=load_json(file)
 		self.ground_truth = json_file["workflow"]["execution"]
-	
+	def __repr__(self):
+		return str(self.experiment_params)
 class CalibrationSimulator(Simulator):
 	def __init__(self,simulator_path,json_template,experiments,alg, loss ,verbosity = None):
 		super().__init__(simulator_path,json_template,verbosity)
@@ -274,7 +275,7 @@ if __name__ == "__main__":
 					calibration={}
 				
 				try: 
-					template=args.template(args.template)
+					template=load_json(args.template)
 				except FileNotFoundError:
 					try:
 						template=json.loads(args.template)
@@ -371,12 +372,13 @@ if __name__ == "__main__":
 					experiments[i]=Experiment(experiments[i])
 				alg=SchedulingAlg(args.task_selection_scheme,args.worker_selection_scheme,args.num_cores_selection_scheme)	
 				simulator=Simulator(args.simulator_path,template,verbosity = verbosity)
-				def synthetic_run(sim,alg,state,cal,output_dir):
+				def synthetic_run(sim,alg,exp,state,cal,output_dir):
 					json_args=alg.modifyJSON(template)
+					json_args=sim.modifyJSON(json_args,exp.experiment_params)
 					json_args=sim.modifyJSON(json_args,state)
 					json_args=sim.modifyJSON(json_args,cal)
 					output=sim(json_args)
-					file="synthetic_"+json_args["workflow"]["file"]
+					file=json_args["workflow"]["file"]
 					json_file=load_json(file)
 					file.replace("\\","/")
 					#replace content of json file
@@ -389,11 +391,11 @@ if __name__ == "__main__":
 						if task["id"] in output["task_completions"]:
 							task["runtimeInSeconds"]=output["task_completions"][task["id"]]["end_date"]-output["task_completions"][task["id"]]["start_date"]
 							task["machines"]=[output["task_completions"][task["id"]]["worker"]]
-					with open(output_dir+"/"+json_args["workflow"]["file"].split("/")[-1]) as synth_file:
-						synth_file=json.dump(json_file)
+					with open(output_dir+"/synthetic_"+json_args["workflow"]["file"].split("/")[-1],'w') as synth_file:
+						json.dump(json_file,synth_file)
 
 				for exp in experiments:
-					coordinator.allocate(synthetic_run, (simulator, alg, state, calibration,args.output_dir))
+					coordinator.allocate(synthetic_run, (simulator, alg, exp,state , calibration,args.output_dir))
 					results = coordinator.collect()
 				results = coordinator.await_all()
 			except ParseException:
