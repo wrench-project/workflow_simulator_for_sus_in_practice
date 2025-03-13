@@ -43,11 +43,11 @@ class Simulator(sc.Simulator):
 			json_output=json.loads(output[0])
 		except:
 			if "parse_error" in self.verbosity:
-				print(json_args,file=sys.stderr)
+				print(json.dumps(json_args),file=sys.stderr)
 				print(output,file=sys.stderr)
 			raise
 		if len(output[1].split("\n"))>3 and "sim_error" in self.verbosity:
-			print(json_args,file=sys.stderr)
+			print(json.dumps(json_args),file=sys.stderr)
 			print(output,file=sys.stderr)
 		return json.loads(output[0])
 	def run(self,env,json_args):
