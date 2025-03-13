@@ -77,7 +77,8 @@ if __name__ == "__main__":
 	from alg_manager import *
 	parser = argparse.ArgumentParser(description="Simulation Argument Parser")
 	parser.add_argument("-c", "--calibration", type=str, help="Calibration JSON as string", required=False)
-	parser.add_argument("-s", "--state", type=str, help="State JSON as string", required=False)
+	parser.add_argument("-s", "--state", type=str, help="State JSON as string")
+	parser.add_argument("-s2", "--state2", type=str, help="State JSON to transition to as string")
 	parser.add_argument("-p", "--simulator_path", type=str, help="Path to the simulator", required=True)
 	parser.add_argument("-t", "--template", type=str, help="Template JSON as string", required=True)
 	parser.add_argument("-m", "--metric", type=str, help="Metric to use", required=True)
@@ -95,6 +96,10 @@ if __name__ == "__main__":
 		state=json.loads(args.state)
 	else:
 		state={}	
+	if(args.state2 is not None):
+		state2=json.loads(args.state2)
+	else:
+		state2={}	
 	try: 
 		template=load_json(args.template)
 	except FileNotFoundError:
@@ -120,9 +125,16 @@ if __name__ == "__main__":
 	algs=AlgManager(args.task_selection_schemes,args.worker_selection_schemes,args.num_cores_selection_schemes)
 	
 	simulator=SchedulingSimulator(args.simulator_path,template,calibration,algs,metric,coordinator,verbosity = verbosity)
-	ret=server({})
-	print(ret)
+	server=SimulationServer(simulator)
+	print("should be blocking")
 	ret=server(state)
-	print(ret)
+	print(ret,server.shared_data["state"])
+	print("should be nonblocking")
+	ret=server(state2)
+	print(ret,server.shared_data["state"])
+	time.sleep(5) 
+	print("should be blocking")
 	ret=server.stop()
-	print(ret)
+	
+	print("should be final state")
+	print(ret,server.shared_data["state"])
