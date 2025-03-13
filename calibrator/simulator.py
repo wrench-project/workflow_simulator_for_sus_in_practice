@@ -123,7 +123,7 @@ class SchedulingSimulator(Simulator):
 		best=None
 		bestScore=None
 		for alg in self.algs.asObj():
-			self.coordinator.allocate(_exec, (simulator, alg, args, stoptime))
+			self.coordinator.allocate(_exec, (self, alg, args, stoptime))
 			results = self.coordinator.collect()
 			for current, score in results:
 				if score is None:
