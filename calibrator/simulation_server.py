@@ -74,6 +74,7 @@ if __name__ == "__main__":
 	import metrics
 	import loss as losses
 	from glob import glob
+	from alg_manager import *
 	parser = argparse.ArgumentParser(description="Simulation Argument Parser")
 	parser.add_argument("-c", "--calibration", type=str, help="Calibration JSON as string", required=False)
 	parser.add_argument("-s", "--state", type=str, help="State JSON as string", required=False)
