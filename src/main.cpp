@@ -140,8 +140,6 @@ int main(int argc, char** argv) {
     scheduler->computeBottomLevels(workflow);
     scheduler->computeNumbersOfChildren(workflow);
 
-    std::cerr << "FOO\n";
-
     // Create the WMS
     auto wms = simulation->add(
         new SimpleWMS(
