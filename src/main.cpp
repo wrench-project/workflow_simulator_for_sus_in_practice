@@ -116,25 +116,19 @@ int main(int argc, char** argv) {
         compute_services_map[service->getHostname()] = service;
     }
 
-    std::cerr << "CREATING THE WORKFLOW\n";
-
     // Create the workflow
     auto workflow = WorkflowCreator::create_workflow(json_input["workflow"]);
-    std::cerr << "FOO\n";
 
     // Stage all input files on the Storage Service
     for (const auto& f : workflow->getInputFiles()) {
         storage_service->createFile(f);
     }
-    std::cerr << "FOO\n";
 
     // Create a sorted (by "how far back in the past") vector of tuples of (how far back, Task) for
     // the ongoing tasks
     auto ongoing_tasks = WorkflowCreator::processOngoingTasks(json_input["workflow"], workflow, compute_services_map);
-    std::cerr << "FOO\n";
 
     auto tasks_of_interest = WorkflowCreator::processTasksOfInterest(json_input["workflow"], workflow);
-    std::cerr << "FOO\n";
 
     // Configure the scheduler
     scheduler->setTaskSelectionScheme(json_input["scheduling"]["task_selection_scheme"]);
