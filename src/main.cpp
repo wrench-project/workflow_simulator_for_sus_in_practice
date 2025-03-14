@@ -87,7 +87,11 @@ int main(int argc, char** argv) {
         // Throw whatever exception in case argument values are erroneous
         po::notify(vm);
 
-        json_input = nlohmann::json::parse(json_input_string);
+        try {
+            json_input = nlohmann::json::parse(json_input_string);
+        } catch (const std::exception& e) {
+            cerr << "Error parsing the input JSON: " << e.what() << std::endl;
+        }
     }
     catch (std::exception& e) {
         cerr << "Error: " << e.what() << "\n";
