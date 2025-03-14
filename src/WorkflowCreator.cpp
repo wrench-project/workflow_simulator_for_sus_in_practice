@@ -28,7 +28,8 @@ std::shared_ptr<wrench::Workflow> WorkflowCreator::create_workflow(const nlohman
             true,
             false);
     } catch (const std::exception& e) {
-        throw std::runtime_error("Error file importing JSON workflow in file " + workflow_spec["file"] + std::string(": ") + e.what());
+        throw std::runtime_error("Error file importing JSON workflow in file " + std::string(workflow_spec["file"]) +
+            std::string(": ") + std::string(e.what()));
     }
 
     // Disable dynamic updates for speed
