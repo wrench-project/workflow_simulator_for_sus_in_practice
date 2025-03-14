@@ -163,7 +163,7 @@ int main(int argc, char** argv) {
             tasks_of_interest));
 
     // Launch the simulation
-    std::cerr << "Launching the Simulation..." << std::endl;
+    std::out << "Launching the Simulation..." << std::endl;
     timeval begin_sim{}, end_sim{};
 
     gettimeofday(&begin_sim, nullptr);
