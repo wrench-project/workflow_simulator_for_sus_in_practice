@@ -14,3 +14,5 @@ build/*
 *.bak
 cmake-build-debug
 *.pyc
+calibrator/build
+__pycache__
