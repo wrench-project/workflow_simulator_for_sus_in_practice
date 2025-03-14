@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
     try {
         scheduling_overhead = json_input["scheduling"]["task_scheduling_overhead"];
     } catch (const nlohmann::detail::type_error& e) {
-        std::cerr << "Error parsing the scheduling overhead: " << e.what() << std::endl;
+        std::cerr << "Invalid task_scheduling_overhead value: " << e.what() << std::endl;
         exit(1);
     }
     scheduler->setTaskSchedulingOverhead(scheduling_overhead);;
