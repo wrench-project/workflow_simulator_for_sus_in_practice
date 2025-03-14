@@ -15,10 +15,25 @@ std::shared_ptr<wrench::Workflow> WorkflowCreator::create_workflow(const nlohman
     // hardcode 1 and 64. Check out the macros.
 
     std::shared_ptr<wrench::Workflow> workflow;
+    std::string workflow_file;
+    std::cerr << workflow_spec << "\n";
+    try {
+        workflow_file = workflow_spec["file"].get<std::string>();
+    } catch (const nlohmann::detail::type_error &e) {
+        throw std::invalid_argument("Invalid workflow_file value: " + std::string(e.what()));
+    }
+
+    std::string reference_flops;
+    try {
+        reference_flops = workflow_spec["reference_flops"].get<std::string>();
+    } catch (const nlohmann::detail::type_error &e) {
+        throw std::invalid_argument("Invalid reference_flops value: " + std::string(e.what()));
+    }
+
     try {
         workflow = wrench::WfCommonsWorkflowParser::createWorkflowFromJSON(
-            workflow_spec["file"],
-            workflow_spec["reference_flops"],
+            workflow_file,
+            reference_flops,
             true,
             false,
             true,
@@ -56,9 +71,27 @@ WorkflowCreator::processOngoingTasks(
                                wrench::WorkflowTask>>> to_return;
 
     for (auto const& spec : workflow_spec["ongoing_tasks"]) {
-        double how_far_back = spec["how_far_back"].get<double>();
-        std::shared_ptr<wrench::BareMetalComputeService> cs = compute_services_map.at(spec["worker"]);
-        std::shared_ptr<wrench::WorkflowTask> task = workflow->getTaskByID(spec["task"]);
+        double how_far_back;
+        try {
+            how_far_back = spec["how_far_back"].get<double>();
+        } catch (const nlohmann::detail::type_error &e) {
+            throw std::invalid_argument("Invalid how_far_back value: " + std::string(e.what()));
+        }
+
+        std::string worker_name;
+        try {
+            worker_name = spec["worker"];
+        } catch (const nlohmann::detail::type_error &e) {
+            throw std::invalid_argument("Invalid worker value for an ongoing task: " + std::string(e.what()));
+        }
+        std::string task_name;
+        try {
+            task_name = spec["task"];
+        } catch (const nlohmann::detail::type_error &e) {
+            throw std::invalid_argument("Invalid task_name value for an ongoing task: " + std::string(e.what()));
+        }
+        std::shared_ptr<wrench::BareMetalComputeService> cs = compute_services_map.at(worker_name);
+        std::shared_ptr<wrench::WorkflowTask> task = workflow->getTaskByID(task_name);
         to_return.emplace_back(how_far_back, cs, task);
     }
 
