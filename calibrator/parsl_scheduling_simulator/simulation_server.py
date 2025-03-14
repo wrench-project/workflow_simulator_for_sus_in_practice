@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import simcal as sc
-from util import *
-from simulator import SchedulingSimulator
+from .util import *
+from .simulator import SchedulingSimulator
 import multiprocessing
 import time
 

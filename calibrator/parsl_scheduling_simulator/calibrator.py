@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import simcal as sc
-from simulator import *
+from .simulator import *
 import time
 from datetime import timedelta
 class Calibrate:
