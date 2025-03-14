@@ -13,17 +13,23 @@ std::shared_ptr<wrench::Workflow> WorkflowCreator::create_workflow(const nlohman
     // Parse the workflow
     // As a performance optimization, in this whole simulator, instead of calling getMinNumCores() and getMaxNumCores(), we just
     // hardcode 1 and 64. Check out the macros.
-    auto workflow = wrench::WfCommonsWorkflowParser::createWorkflowFromJSON(
-        workflow_spec["file"],
-        workflow_spec["reference_flops"],
-        true,
-        false,
-        true,
-        1,
-        64,
-        true,
-        true,
-        false);
+
+    std::shared_ptr<wrench::Workflow> workflow;
+    try {
+        workflow = wrench::WfCommonsWorkflowParser::createWorkflowFromJSON(
+            workflow_spec["file"],
+            workflow_spec["reference_flops"],
+            true,
+            false,
+            true,
+            1,
+            64,
+            true,
+            true,
+            false);
+    } catch (const std::exception& e) {
+        throw std::runtime_error("Error file importing JSON workflow in file " + workflow_spec["file"] + std::string(": ") + e.what());
+    }
 
     // Disable dynamic updates for speed
     workflow->enableTopBottomLevelDynamicUpdates(false);
