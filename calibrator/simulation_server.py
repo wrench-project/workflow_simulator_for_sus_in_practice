@@ -2,6 +2,7 @@
 import simcal as sc
 from parsl_scheduling_simulator.util import *
 from parsl_scheduling_simulator.simulator import SchedulingSimulator
+from parsl_scheduling_simulator.simulation_server import SimulationServer
 import multiprocessing
 import time
 
@@ -11,10 +12,10 @@ if __name__ == "__main__":
 	import sys
 	import argparse
 	import traceback
-	import parsl_scheduling_simulator.metrics
+	import parsl_scheduling_simulator.metrics as metrics
 	import parsl_scheduling_simulator.loss as losses
 	from glob import glob
-	from alg_manager import *
+	from parsl_scheduling_simulator.alg_manager import *
 	parser = argparse.ArgumentParser(description="Simulation Argument Parser")
 	parser.add_argument("-c", "--calibration", type=str, help="Calibration JSON as string", required=False)
 	parser.add_argument("-s", "--state", type=str, help="State JSON as string")
