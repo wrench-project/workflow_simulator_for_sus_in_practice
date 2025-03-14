@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import simcal as sc
-from simulator import *
+from .simulator import *
 import time
 from datetime import timedelta
 class Calibrate:
@@ -66,8 +66,8 @@ if __name__ == "__main__":
 	import sys
 	import argparse
 	import traceback
-	import metrics
-	import loss as losses
+	import .metrics
+	import .loss as losses
 	from glob import glob
 	parser = argparse.ArgumentParser(description="Calibration Argument Parser")
 	parser.add_argument("-p", "--simulator_path", type=str, help="Path to the simulator", required=True)

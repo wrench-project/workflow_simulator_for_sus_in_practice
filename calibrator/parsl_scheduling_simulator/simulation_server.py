@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import simcal as sc
-from util import *
-from simulator import SchedulingSimulator
+from .util import *
+from .simulator import SchedulingSimulator
 import multiprocessing
 import time
 
@@ -71,8 +71,8 @@ if __name__ == "__main__":
 	import sys
 	import argparse
 	import traceback
-	import metrics
-	import loss as losses
+	import .metrics
+	import .loss as losses
 	from glob import glob
 	from alg_manager import *
 	parser = argparse.ArgumentParser(description="Simulation Argument Parser")
