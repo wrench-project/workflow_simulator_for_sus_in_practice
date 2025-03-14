@@ -16,3 +16,4 @@ cmake-build-debug
 *.pyc
 calibrator/build
 __pycache__
+parsl_scheduling_simulator.egg-info
