@@ -54,6 +54,8 @@ int main(int argc, char** argv) {
     // Declaration of the top-level WRENCH simulation object
     simulation = wrench::Simulation::createSimulation();
 
+    wrench::S4U_CommPort::commport_pool_size = 50000;
+
     // Initialization of the simulation
     simulation->init(&argc, argv);
 
