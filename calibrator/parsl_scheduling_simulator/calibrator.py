@@ -24,17 +24,17 @@ class Calibrate:
 		self.coordinator = sc.coordinators.ThreadPool(pool_size=threads)
 	def param_ranges(self):
 		self.calibrator.add_param("wms_read_bandwidth", sc.parameters.Exponential(20, 30).
-								 format("%lfBps").set_custom_data({"json_type":str,"key":[
+								 format("%lf.0Bps").set_custom_data({"json_type":str,"key":[
 									"platform",
 									"wms",
 									"disk_read_bandwidth"]}))
 		self.calibrator.add_param("wms_write_bandwidth", sc.parameters.Exponential(20, 30).
-								 format("%lfBps").set_custom_data({"json_type":str,"key":[
+								 format("%lf.0Bps").set_custom_data({"json_type":str,"key":[
 									"platform",
 									"wms",
 									"disk_write_bandwidth"]}))
 		self.calibrator.add_param("wms_network_bandwidth", sc.parameters.Exponential(20, 40).
-								 format("%lfbps").set_custom_data({"json_type":str,"key":[
+								 format("%lf.0bps").set_custom_data({"json_type":str,"key":[
 									"platform",
 									"wms",
 									"network_bandwidth"]}))
@@ -45,7 +45,7 @@ class Calibrate:
 									"worker\\d+",
 									"speed"]}))		
 		self.calibrator.add_param("worker_network_bandwidth", sc.parameters.Exponential(20, 40).
-								 format("%lfbps").set_custom_data({"json_type":str,"key":[
+								 format("%lf.0bps").set_custom_data({"json_type":str,"key":[
 									"platform",
 									"workers",
 									"worker\\d+",
