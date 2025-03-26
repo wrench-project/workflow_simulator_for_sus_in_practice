@@ -1,1 +1,59 @@
 random
+Actually ran in 0:10:00
+calibrating for 600
+finished
+{'wms_read_bandwidth': 7520886Bps, 'wms_write_bandwidth': 33357332Bps, 'wms_network_bandwidth': 641522984bps, 'worker_speed': 1.080916f, 'worker_network_bandwidth': 516967983313bps, 'task_scheduling_overhead': 0.494963}
+0.6742475196504916
+[(1742002340, ({'wms_read_bandwidth': 22606137Bps, 'wms_write_bandwidth': 164621562Bps, 'wms_network_bandwidth': 53828086408bps, 'worker_speed': 1.035793f, 'worker_network_bandwidth': 126814875bps, 'task_scheduling_overhead': 9.074025}, 18.019094968872178)), (1742002380, ({'wms_read_bandwidth': 61082900Bps, 'wms_write_bandwidth': 945842881Bps, 'wms_network_bandwidth': 2304407754bps, 'worker_speed': 0.919739f, 'worker_network_bandwidth': 3429583bps, 'task_scheduling_overhead': 7.722396}, 17.196985520159735)), (1742002419, ({'wms_read_bandwidth': 12641580Bps, 'wms_write_bandwidth': 1329043Bps, 'wms_network_bandwidth': 493596321bps, 'worker_speed': 0.969568f, 'worker_network_bandwidth': 240353943bps, 'task_scheduling_overhead': 5.137998}, 12.880791516731096)), (1742002439, ({'wms_read_bandwidth': 335550545Bps, 'wms_write_bandwidth': 2645207Bps, 'wms_network_bandwidth': 9588648bps, 'worker_speed': 0.954903f, 'worker_network_bandwidth': 13903142437bps, 'task_scheduling_overhead': 0.621189}, 4.668798427571709)), (1742002459, ({'wms_read_bandwidth': 2383370Bps, 'wms_write_bandwidth': 587855756Bps, 'wms_network_bandwidth': 63197407965bps, 'worker_speed': 1.084814f, 'worker_network_bandwidth': 100611506bps, 'task_scheduling_overhead': 2.371000}, 4.207697102855128)), (1742002555, ({'wms_read_bandwidth': 1326899Bps, 'wms_write_bandwidth': 3576415Bps, 'wms_network_bandwidth': 968231993419bps, 'worker_speed': 0.925187f, 'worker_network_bandwidth': 125427979522bps, 'task_scheduling_overhead': 0.859942}, 2.369472592318791)), (1742002594, ({'wms_read_bandwidth': 146628268Bps, 'wms_write_bandwidth': 3232770Bps, 'wms_network_bandwidth': 4133486021bps, 'worker_speed': 1.067298f, 'worker_network_bandwidth': 32662835bps, 'task_scheduling_overhead': 0.454247}, 1.7902743872433473)), (1742002728, ({'wms_read_bandwidth': 7520886Bps, 'wms_write_bandwidth': 33357332Bps, 'wms_network_bandwidth': 641522984bps, 'worker_speed': 1.080916f, 'worker_network_bandwidth': 516967983313bps, 'task_scheduling_overhead': 0.494963}, 0.6742475196504916))]
+gradient
+Actually ran in 0:10:00
+calibrating for 600
+finished
+{'wms_read_bandwidth': 3689265Bps, 'wms_write_bandwidth': 43209971Bps, 'wms_network_bandwidth': 120319275bps, 'worker_speed': 1.060671f, 'worker_network_bandwidth': 73336251bps, 'task_scheduling_overhead': 1.440290}
+2.572799548271577
+[(1742003478, ({'wms_read_bandwidth': 9466632Bps, 'wms_write_bandwidth': 40527349Bps, 'wms_network_bandwidth': 1009972252536bps, 'worker_speed': 1.100000f, 'worker_network_bandwidth': 1099511627776bps, 'task_scheduling_overhead': 6.814542}, 13.3271455802471)), (1742003523, ({'wms_read_bandwidth': 3689265Bps, 'wms_write_bandwidth': 43209971Bps, 'wms_network_bandwidth': 120319275bps, 'worker_speed': 1.060671f, 'worker_network_bandwidth': 73336251bps, 'task_scheduling_overhead': 1.440290}, 2.572799548271577))]
+genetic
+calibrating for 600
+Traceback (most recent call last):
+  File "/home/jamcdonald/workflow_simulator_for_sus_in_practice/calibrator/./calibrator.py", line 74, in <module>
+    calibration=calibrator.calibrate(args.time)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jamcdonald/workflow_simulator_for_sus_in_practice/calibrator/parsl_scheduling_simulator/calibrator.py", line 58, in calibrate
+    calibration, loss=self.calibrator.calibrate(self.simulator, timelimit=timelimit, coordinator=self.coordinator)
+    ^^^^^^^^^^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object
+grid
+Actually ran in 0:10:00
+calibrating for 600
+finished
+{'wms_read_bandwidth': 1048576Bps, 'wms_write_bandwidth': 1073741824Bps, 'wms_network_bandwidth': 1099511627776bps, 'worker_speed': 0.900000f, 'worker_network_bandwidth': 1099511627776bps, 'task_scheduling_overhead': 0.000000}
+0.12661670229715286
+[(1742004160, ({'wms_read_bandwidth': 1048576Bps, 'wms_write_bandwidth': 1048576Bps, 'wms_network_bandwidth': 1048576bps, 'worker_speed': 0.900000f, 'worker_network_bandwidth': 1048576bps, 'task_scheduling_overhead': 0.000000}, 41.866910883137194)), (1742004324, ({'wms_read_bandwidth': 1048576Bps, 'wms_write_bandwidth': 1048576Bps, 'wms_network_bandwidth': 1099511627776bps, 'worker_speed': 0.900000f, 'worker_network_bandwidth': 1048576bps, 'task_scheduling_overhead': 0.000000}, 8.407671258956373)), (1742004363, ({'wms_read_bandwidth': 1048576Bps, 'wms_write_bandwidth': 1048576Bps, 'wms_network_bandwidth': 1099511627776bps, 'worker_speed': 0.900000f, 'worker_network_bandwidth': 1099511627776bps, 'task_scheduling_overhead': 0.000000}, 4.708780276710914)), (1742004674, ({'wms_read_bandwidth': 1048576Bps, 'wms_write_bandwidth': 1073741824Bps, 'wms_network_bandwidth': 1099511627776bps, 'worker_speed': 0.900000f, 'worker_network_bandwidth': 1099511627776bps, 'task_scheduling_overhead': 0.000000}, 0.12661670229715286))]
+skopt.gp
+Actually ran in 0:10:00
+calibrating for 600
+finished
+{'wms_read_bandwidth': 189811543Bps, 'wms_write_bandwidth': 11023188Bps, 'wms_network_bandwidth': 928919758bps, 'worker_speed': 0.967797f, 'worker_network_bandwidth': 12625220bps, 'task_scheduling_overhead': 1.709866}
+3.457558143398397
+[(1742004760, ({'wms_read_bandwidth': 63861636Bps, 'wms_write_bandwidth': 364832114Bps, 'wms_network_bandwidth': 153443050678bps, 'worker_speed': 1.069450f, 'worker_network_bandwidth': 5954255302bps, 'task_scheduling_overhead': 3.843817}, 7.185576422803169)), (1742004858, ({'wms_read_bandwidth': 3815190Bps, 'wms_write_bandwidth': 173358312Bps, 'wms_network_bandwidth': 21103912bps, 'worker_speed': 0.927044f, 'worker_network_bandwidth': 93782809bps, 'task_scheduling_overhead': 1.496749}, 4.120812281384147)), (1742005302, ({'wms_read_bandwidth': 189811543Bps, 'wms_write_bandwidth': 11023188Bps, 'wms_network_bandwidth': 928919758bps, 'worker_speed': 0.967797f, 'worker_network_bandwidth': 12625220bps, 'task_scheduling_overhead': 1.709866}, 3.457558143398397))]
+skopt.gbrt
+Actually ran in 0:10:00
+calibrating for 600
+finished
+{'wms_read_bandwidth': 189811543Bps, 'wms_write_bandwidth': 11023188Bps, 'wms_network_bandwidth': 928919758bps, 'worker_speed': 0.967797f, 'worker_network_bandwidth': 12625220bps, 'task_scheduling_overhead': 1.709866}
+3.457558143398397
+[(1742005362, ({'wms_read_bandwidth': 63861636Bps, 'wms_write_bandwidth': 364832114Bps, 'wms_network_bandwidth': 153443050678bps, 'worker_speed': 1.069450f, 'worker_network_bandwidth': 5954255302bps, 'task_scheduling_overhead': 3.843817}, 7.185576422803169)), (1742005460, ({'wms_read_bandwidth': 3815190Bps, 'wms_write_bandwidth': 173358312Bps, 'wms_network_bandwidth': 21103912bps, 'worker_speed': 0.927044f, 'worker_network_bandwidth': 93782809bps, 'task_scheduling_overhead': 1.496749}, 4.120812281384147)), (1742005898, ({'wms_read_bandwidth': 189811543Bps, 'wms_write_bandwidth': 11023188Bps, 'wms_network_bandwidth': 928919758bps, 'worker_speed': 0.967797f, 'worker_network_bandwidth': 12625220bps, 'task_scheduling_overhead': 1.709866}, 3.457558143398397))]
+skopt.et
+Actually ran in 0:10:00
+calibrating for 600
+finished
+{'wms_read_bandwidth': 189811543Bps, 'wms_write_bandwidth': 11023188Bps, 'wms_network_bandwidth': 928919758bps, 'worker_speed': 0.967797f, 'worker_network_bandwidth': 12625220bps, 'task_scheduling_overhead': 1.709866}
+3.457558143398397
+[(1742005964, ({'wms_read_bandwidth': 63861636Bps, 'wms_write_bandwidth': 364832114Bps, 'wms_network_bandwidth': 153443050678bps, 'worker_speed': 1.069450f, 'worker_network_bandwidth': 5954255302bps, 'task_scheduling_overhead': 3.843817}, 7.185576422803169)), (1742006062, ({'wms_read_bandwidth': 3815190Bps, 'wms_write_bandwidth': 173358312Bps, 'wms_network_bandwidth': 21103912bps, 'worker_speed': 0.927044f, 'worker_network_bandwidth': 93782809bps, 'task_scheduling_overhead': 1.496749}, 4.120812281384147)), (1742006503, ({'wms_read_bandwidth': 189811543Bps, 'wms_write_bandwidth': 11023188Bps, 'wms_network_bandwidth': 928919758bps, 'worker_speed': 0.967797f, 'worker_network_bandwidth': 12625220bps, 'task_scheduling_overhead': 1.709866}, 3.457558143398397))]
+skopt.rf
+Actually ran in 0:10:00
+calibrating for 600
+finished
+{'wms_read_bandwidth': 189811543Bps, 'wms_write_bandwidth': 11023188Bps, 'wms_network_bandwidth': 928919758bps, 'worker_speed': 0.967797f, 'worker_network_bandwidth': 12625220bps, 'task_scheduling_overhead': 1.709866}
+3.457558143398397
+[(1742006566, ({'wms_read_bandwidth': 63861636Bps, 'wms_write_bandwidth': 364832114Bps, 'wms_network_bandwidth': 153443050678bps, 'worker_speed': 1.069450f, 'worker_network_bandwidth': 5954255302bps, 'task_scheduling_overhead': 3.843817}, 7.185576422803169)), (1742006662, ({'wms_read_bandwidth': 3815190Bps, 'wms_write_bandwidth': 173358312Bps, 'wms_network_bandwidth': 21103912bps, 'worker_speed': 0.927044f, 'worker_network_bandwidth': 93782809bps, 'task_scheduling_overhead': 1.496749}, 4.120812281384147)), (1742007100, ({'wms_read_bandwidth': 189811543Bps, 'wms_write_bandwidth': 11023188Bps, 'wms_network_bandwidth': 928919758bps, 'worker_speed': 0.967797f, 'worker_network_bandwidth': 12625220bps, 'task_scheduling_overhead': 1.709866}, 3.457558143398397))]
