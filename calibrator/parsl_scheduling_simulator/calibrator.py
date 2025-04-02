@@ -53,7 +53,11 @@ class Calibrate:
 		self.calibrator.add_param("task_scheduling_overhead", sc.parameters.Linear(0, 10).
 								 format("%lf").set_custom_data({"json_type":float,"key":[
 									"scheduling",
-									"task_scheduling_overhead"]}))									
+									"task_scheduling_overhead"]}))
+		self.calibrator.add_param("task_ready_delay", sc.parameters.Linear(0, 10).
+								 format("%lf").set_custom_data({"json_type":float,"key":[
+									"scheduling",
+									"task_ready_delay"]}))									
 	def calibrate(self,timelimit):
 		calibration, loss=self.calibrator.calibrate(self.simulator, timelimit=timelimit, coordinator=self.coordinator)
 		return (calibration, loss, self.calibrator.timeline)
