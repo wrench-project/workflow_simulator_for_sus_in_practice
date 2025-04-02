@@ -67,7 +67,7 @@ int SimpleWMS::main() {
 
         // Wait for a workflow execution event, and process it
         try {
-            this->waitForAndProcessNextEvent();
+            this->waitForAndProcessNextEvent(0.01);
         }
         catch (wrench::ExecutionException& e) {
             WRENCH_INFO("Error while getting next execution event (%s)... ignoring and trying again",
