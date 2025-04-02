@@ -147,7 +147,16 @@ int main(int argc, char** argv) {
         std::cerr << "Invalid task_scheduling_overhead value: " << e.what() << std::endl;
         exit(1);
     }
-    scheduler->setTaskSchedulingOverhead(scheduling_overhead);;
+    scheduler->setTaskSchedulingOverhead(scheduling_overhead);
+
+    double task_ready_delay;
+    try {
+        task_ready_delay = json_input["scheduling"]["task_ready_delay"];
+    } catch (const nlohmann::detail::type_error& e) {
+        std::cerr << "Invalid task_ready_delay value: " << e.what() << std::endl;
+        exit(1);
+    }
+    scheduler->setTaskReadyDelay(task_ready_delay);
 
     // Compute metrics useful for some scheduling algorithms
     scheduler->computeBottomLevels(workflow);

@@ -41,6 +41,7 @@ public:
     void setWorkerSelectionScheme(const std::string& scheme_name);
     void setNumCoresSelectionScheme(const std::string& scheme_name);
     void setTaskSchedulingOverhead(const double overhead_in_seconds);
+    void setTaskReadyDelay(const double delay_in_seconds);
 
 private:
     friend class SimpleWMS;
@@ -88,6 +89,7 @@ private:
     _num_cores_selection_schemes;
 
     double _task_scheduling_overhead = 0.0;
+    double _task_ready_delay = 0.0;
 
     std::shared_ptr<wrench::StorageService> _storage_service;
     std::set<std::shared_ptr<wrench::BareMetalComputeService>> _compute_services;
