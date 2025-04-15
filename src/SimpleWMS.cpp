@@ -63,11 +63,16 @@ int SimpleWMS::main() {
         const auto ready_tasks = _workflow->getReadyTasks();
 
         // Run ready tasks with defined scheduler implementation
-        _scheduler->scheduleTasks(ready_tasks);
+        const auto num_task_scheduled = _scheduler->scheduleTasks(ready_tasks);
 
         // Wait for a workflow execution event, and process it
         try {
-            this->waitForAndProcessNextEvent(0.01);
+            if (num_task_scheduled == 0) {
+                this->waitForAndProcessNextEvent(0.01);
+            }
+            else {
+                this->waitForAndProcessNextEvent();
+            }
         }
         catch (wrench::ExecutionException& e) {
             WRENCH_INFO("Error while getting next execution event (%s)... ignoring and trying again",
@@ -76,7 +81,7 @@ int SimpleWMS::main() {
     }
 
     // Pretty wild
-    //    wrench::Simulation::sleep(0.00001);
+    //    wrench::Simulation::sleep(0.00001);   
     return 0;
 }
 

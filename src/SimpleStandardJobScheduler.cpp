@@ -86,7 +86,7 @@ bool SimpleStandardJobScheduler::scheduleTask(const std::shared_ptr<wrench::Work
     return true;
 }
 
-void SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> tasks) {
+int SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> tasks) {
     prioritizeTasks(tasks);
     //    std::cerr << "AFTER PRIORITIZATION: \n";
     //    for (auto const &rt: tasks) {
@@ -115,6 +115,8 @@ void SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrenc
         this->submitTaskToWorker(task, picked_service, picked_num_cores);
     }
     WRENCH_INFO("Done with scheduling tasks as standard jobs");
+
+    return tasks.size();
 }
 
 

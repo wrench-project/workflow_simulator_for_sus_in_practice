@@ -22,7 +22,7 @@ class SimpleStandardJobScheduler {
 public:
     explicit SimpleStandardJobScheduler();
 
-    void scheduleTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> tasks);
+    int scheduleTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> tasks);
 
     void init(
         std::shared_ptr<wrench::JobManager> job_manager,
