@@ -188,6 +188,8 @@ int main(int argc, char** argv) {
 
     // Output
     nlohmann::json output_json;
+    output_json["worker_selection_scheme"] = json_input["scheduling"]["worker_selection_scheme"];
+    output_json["task_selection_scheme"] = json_input["scheduling"]["task_selection_scheme"];
     output_json["simulation_time"] = ((static_cast<double>(end_sim.tv_sec) * 1000000 + end_sim.tv_usec) -
         (static_cast<double>(begin_sim.tv_sec) * 1000000 +
             begin_sim.tv_usec)) / 1000000.0;
