@@ -43,8 +43,9 @@ class SimulationServer:
 		return ret
 		
 	def wait(self):
-		self.process.join()
-		self.process = None
+		if self.process is not None:
+			self.process.join()
+			self.process = None
 		return self.shared_data["ret"]
 		
 	def update_state(self, state):
@@ -61,6 +62,7 @@ class SimulationServer:
 	def stop(self):
 		"""Stop the background process."""
 		self.shared_data["running"] = False
-		self.process.join()
-		self.process = None
+		if self.process is not None:
+			self.process.join()
+			self.process = None
 		return self.shared_data["ret"]
