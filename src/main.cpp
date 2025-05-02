@@ -147,7 +147,16 @@ int main(int argc, char** argv) {
         std::cerr << "Invalid task_scheduling_overhead value: " << e.what() << std::endl;
         exit(1);
     }
-    scheduler->setTaskSchedulingOverhead(scheduling_overhead);;
+    scheduler->setTaskSchedulingOverhead(scheduling_overhead);
+
+    double task_ready_delay;
+    try {
+        task_ready_delay = json_input["scheduling"]["task_ready_delay"];
+    } catch (const nlohmann::detail::type_error& e) {
+        std::cerr << "Invalid task_ready_delay value: " << e.what() << std::endl;
+        exit(1);
+    }
+    scheduler->setTaskReadyDelay(task_ready_delay);
 
     // Compute metrics useful for some scheduling algorithms
     scheduler->computeBottomLevels(workflow);
@@ -179,6 +188,8 @@ int main(int argc, char** argv) {
 
     // Output
     nlohmann::json output_json;
+    output_json["worker_selection_scheme"] = json_input["scheduling"]["worker_selection_scheme"];
+    output_json["task_selection_scheme"] = json_input["scheduling"]["task_selection_scheme"];
     output_json["simulation_time"] = ((static_cast<double>(end_sim.tv_sec) * 1000000 + end_sim.tv_usec) -
         (static_cast<double>(begin_sim.tv_sec) * 1000000 +
             begin_sim.tv_usec)) / 1000000.0;

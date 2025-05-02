@@ -44,6 +44,16 @@ bool SimpleStandardJobScheduler::taskCanRunOn(const std::shared_ptr<wrench::Work
 }
 
 void SimpleStandardJobScheduler::prioritizeTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>>& tasks) const {
+    // Remove the tasks that have become ready "too recently"
+    double now = wrench::Simulation::getCurrentSimulatedDate();
+    for (auto it = tasks.begin(); it != tasks.end();) {
+        if ((*it)->getReadyDate() > now - this->_task_ready_delay) {  // Example condition: remove even numbers
+            it = tasks.erase(it);  // erase returns the next valid iterator
+        } else {
+            ++it;  // Only increment the iterator if no removal occurred
+        }
+    }
+    // Sort the tasks
     std::sort(tasks.begin(), tasks.end(), _task_selection_scheme);
 }
 
@@ -76,7 +86,7 @@ bool SimpleStandardJobScheduler::scheduleTask(const std::shared_ptr<wrench::Work
     return true;
 }
 
-void SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> tasks) {
+int SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrench::WorkflowTask>> tasks) {
     prioritizeTasks(tasks);
     //    std::cerr << "AFTER PRIORITIZATION: \n";
     //    for (auto const &rt: tasks) {
@@ -105,6 +115,8 @@ void SimpleStandardJobScheduler::scheduleTasks(std::vector<std::shared_ptr<wrenc
         this->submitTaskToWorker(task, picked_service, picked_num_cores);
     }
     WRENCH_INFO("Done with scheduling tasks as standard jobs");
+
+    return tasks.size();
 }
 
 
@@ -236,4 +248,8 @@ void SimpleStandardJobScheduler::setNumCoresSelectionScheme(const std::string& s
 
 void SimpleStandardJobScheduler::setTaskSchedulingOverhead(const double overhead_in_seconds) {
     _task_scheduling_overhead = overhead_in_seconds;
+}
+
+void SimpleStandardJobScheduler::setTaskReadyDelay(const double delay_in_seconds) {
+    _task_ready_delay = delay_in_seconds;
 }

@@ -35,7 +35,8 @@
     "task_selection_scheme": "most_flops",
     "worker_selection_scheme": "most_idle_cores",
     "num_cores_selection_scheme": "one_core",
-    "task_scheduling_overhead": 1
+    "task_scheduling_overhead": 1,
+    "task_ready_delay": 0
   }
 }
 
