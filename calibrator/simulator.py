@@ -234,7 +234,7 @@ if __name__ == "__main__":
 			except ParseException:
 				pass
 			except Exception:
-				print(traceback.format_exc())
+				print(traceback.format_exc(),file=sys.stderr)
 		else:
 			print(f"subcommand \"{sys.argv[1]}\" not recognized",file=sys.stderr)
 			raise
