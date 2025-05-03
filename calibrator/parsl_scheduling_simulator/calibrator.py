@@ -38,7 +38,7 @@ class Calibrate:
 									"platform",
 									"wms",
 									"network_bandwidth"]}))
-		self.calibrator.add_param("worker_speed", sc.parameters.Linear(0.9, 1.1).
+		self.calibrator.add_param("worker_speed", sc.parameters.Exponential(20, 40).
 								 format("%lff").set_custom_data({"json_type":str,"key":[
 									"platform",
 									"workers",
