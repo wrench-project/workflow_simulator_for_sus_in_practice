@@ -63,7 +63,7 @@ def relative_endpoint_dif(simulated,real):
 		total+= (end+start)/(realt["end_date"]-realt["start_date"])
 	return total/len(real["task_completions"])
 	
-def relative_endpoint_dif(simulated,real):
+def relative_endpoint_dif2(simulated,real):
 	total=0
 	for task in real["task_completions"]:
 		realt=real["task_completions"][task]
