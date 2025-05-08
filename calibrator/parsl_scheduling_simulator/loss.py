@@ -18,6 +18,9 @@ def avg_aggregator(losses):
 	
 def sum_aggregator(losses):
 	return sum(losses)
+
+def max_aggregator(losses):
+	return max(losses)
 	
 class AvgMakespanLoss(Loss):
 	def __init__(self):
