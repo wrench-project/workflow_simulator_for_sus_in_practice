@@ -28,53 +28,61 @@ class AvgMakespanLoss(Loss):
 		
 def relative_runtime_loss(simulated,real):
 	total=0
-	for task in real["task_completions"]:
-		realt=real["task_completions"][task]
-		simt=simulated["task_completions"][task]
+	for task in real["tasks"]:
+		realt=real["tasks"][task]
+		taskid=realt["id"]
+		simt=simulated["task_completions"][taskid]
 		sim=simt["end_date"]-simt["start_date"]
-		real=realt["end_date"]-realt["start_date"]
+		real=realt["runtimeInSeconds"]
 		total+= _relative_loss(sim,real)
-	return total/len(real["task_completions"])
+	return total/len(real["tasks"])
 		
 def relative_starttime_loss(simulated,real):
 	total=0
-	for task in real["task_completions"]:
-		realt=real["task_completions"][task]
-		simt=simulated["task_completions"][task]
+	for task in real["tasks"]:
+		realt=real["tasks"][task]
+		taskid=realt["id"]
+		simt=simulated["task_completions"][taskid]
 		sim=simt["start_date"]
-		real=realt["start_date"]
-		total+= _relative_loss(sim,real)	
-	return total/len(real["task_completions"])
+		real=realt["executedAt"]
+		total+= _relative_loss(sim,real)
+	return total/len(real["tasks"])
+
 
 def relative_endtime_loss(simulated,real):
 	total=0
-	for task in real["task_completions"]:
-		realt=real["task_completions"][task]
-		simt=simulated["task_completions"][task]
+	for task in real["tasks"]:
+		realt=real["tasks"][task]
+		taskid=realt["id"]
+		simt=simulated["task_completions"][taskid]
 		sim=simt["end_date"]
-		real=realt["end_date"]
-		total+=_relative_loss(sim,real)		
-	return total/len(real["task_completions"])
+		real=realt["executedAt"]+realt["runtimeInSeconds"]
+		total+= _relative_loss(sim,real)
+	return total/len(real["tasks"])
 	
 def relative_endpoint_dif(simulated,real):
 	total=0
-	for task in real["task_completions"]:
-		realt=real["task_completions"][task]
-		simt=simulated["task_completions"][task]
-		end=abs(simt["end_date"]-realt["end_date"])
-		start=abs(simt["start_date"]-realt["start_date"])
-		total+= (end+start)/(realt["end_date"]-realt["start_date"])
-	return total/len(real["task_completions"])
+	for task in real["tasks"]:
+		realt=real["tasks"][task]
+		taskid=realt["id"]
+		simt=simulated["task_completions"][taskid]
+		end=abs(simt["end_date"]-(realt["executedAt"]+realt["runtimeInSeconds"]))
+		start=abs(simt["start_date"]-realt["executedAt"])
+		total+= (end+start)/(realt["runtimeInSeconds"])
+	return total/len(real["tasks"])
+
 	
 def relative_endpoint_dif2(simulated,real):
 	total=0
-	for task in real["task_completions"]:
-		realt=real["task_completions"][task]
-		simt=simulated["task_completions"][task]
-		union=max(realt["end_date"],simt["end_date"])-min(realt["start_date"],simt["start_date"])
-		intersection=min(realt["end_date"],simt["end_date"])-max(realt["start_date"],simt["start_date"])
+	for task in real["tasks"]:
+		realt=real["tasks"][task]
+		taskid=realt["id"]
+		simt=simulated["task_completions"][taskid]
+		union=max((realt["executedAt"]+realt["runtimeInSeconds"]),simt["end_date"])-min(realt["start_date"],simt["start_date"])
+		intersection=min((realt["executedAt"]+realt["runtimeInSeconds"]),simt["end_date"])-max(realt["executedAt"],simt["start_date"])
 		total+= 1-union/intersection
-	return total/len(real["task_completions"])
+	return total/len(real["tasks"])
+
 	
 class AvgMakespanLoss(Loss):
 	def __init__(self):
