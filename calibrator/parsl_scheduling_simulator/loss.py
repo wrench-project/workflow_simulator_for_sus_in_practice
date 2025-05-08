@@ -33,8 +33,8 @@ def relative_runtime_loss(simulated,real):
 		taskid=realt["id"]
 		simt=simulated["task_completions"][taskid]
 		sim=simt["end_date"]-simt["start_date"]
-		real=realt["runtimeInSeconds"]
-		total+= _relative_loss(sim,real)
+		realt=realt["runtimeInSeconds"]
+		total+= _relative_loss(sim,realt)
 	return total/len(real["tasks"])
 		
 def relative_starttime_loss(simulated,real):
@@ -44,8 +44,8 @@ def relative_starttime_loss(simulated,real):
 		taskid=realt["id"]
 		simt=simulated["task_completions"][taskid]
 		sim=simt["start_date"]
-		real=realt["executedAt"]
-		total+= _relative_loss(sim,real)
+		realt=realt["executedAt"]
+		total+= _relative_loss(sim,realt)
 	return total/len(real["tasks"])
 
 
@@ -56,8 +56,8 @@ def relative_endtime_loss(simulated,real):
 		taskid=realt["id"]
 		simt=simulated["task_completions"][taskid]
 		sim=simt["end_date"]
-		real=realt["executedAt"]+realt["runtimeInSeconds"]
-		total+= _relative_loss(sim,real)
+		realt=realt["executedAt"]+realt["runtimeInSeconds"]
+		total+= _relative_loss(sim,realt)
 	return total/len(real["tasks"])
 	
 def relative_endpoint_dif(simulated,real):
