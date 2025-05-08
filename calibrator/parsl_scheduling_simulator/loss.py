@@ -29,7 +29,7 @@ class AvgMakespanLoss(Loss):
 def relative_runtime_loss(simulated,real):
 	total=0
 	for task in real["tasks"]:
-		realt=real["tasks"][task]
+		realt=task
 		taskid=realt["id"]
 		simt=simulated["task_completions"][taskid]
 		sim=simt["end_date"]-simt["start_date"]
@@ -40,7 +40,7 @@ def relative_runtime_loss(simulated,real):
 def relative_starttime_loss(simulated,real):
 	total=0
 	for task in real["tasks"]:
-		realt=real["tasks"][task]
+		realt=task
 		taskid=realt["id"]
 		simt=simulated["task_completions"][taskid]
 		sim=simt["start_date"]
@@ -52,7 +52,7 @@ def relative_starttime_loss(simulated,real):
 def relative_endtime_loss(simulated,real):
 	total=0
 	for task in real["tasks"]:
-		realt=real["tasks"][task]
+		realt=task
 		taskid=realt["id"]
 		simt=simulated["task_completions"][taskid]
 		sim=simt["end_date"]
@@ -63,7 +63,7 @@ def relative_endtime_loss(simulated,real):
 def relative_endpoint_dif(simulated,real):
 	total=0
 	for task in real["tasks"]:
-		realt=real["tasks"][task]
+		realt=task
 		taskid=realt["id"]
 		simt=simulated["task_completions"][taskid]
 		end=abs(simt["end_date"]-(realt["executedAt"]+realt["runtimeInSeconds"]))
@@ -75,7 +75,7 @@ def relative_endpoint_dif(simulated,real):
 def relative_endpoint_dif2(simulated,real):
 	total=0
 	for task in real["tasks"]:
-		realt=real["tasks"][task]
+		realt=task
 		taskid=realt["id"]
 		simt=simulated["task_completions"][taskid]
 		union=max((realt["executedAt"]+realt["runtimeInSeconds"]),simt["end_date"])-min(realt["start_date"],simt["start_date"])
