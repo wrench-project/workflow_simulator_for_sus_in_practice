@@ -9,6 +9,16 @@ _units={None:1,"":1,
 "bps":1,"Kbps":1_000,"Mbps":1_000_000,"Gbps":1_000_000_000,
 "b":1,"Kb":1_000,"Mb":1_000_000,"Gb":1_000_000_000,
 "B":1,"KB":1_000,"MB":1_000_000,"GB":1_000_000_000}
+
+def raw_to_ast(input_str):
+    
+	items=input_str[1:-1].split(",")
+	
+	for i in range(len(items)):
+		each=items[i].split(":")
+		each = [("'"+ea.strip()+"'").replace("''","'") for ea in each]
+		items[i]=":".join(each)
+	return "{"+(", ".join(items))+"}"
 def parseDoubleUnited(raw: str):
 	#print(raw,re.match(r"(\d+\.?\d*)([a-zA-Z]+)*", raw).groups())
 	result = re.match(r"(\d+\.?\d*)([a-zA-Z]+)*", raw).groups()
@@ -24,7 +34,8 @@ def flatten(arr):
 		else:
 			flat_list.append(item)  # Append non-list item
 	return flat_list
-
+def relative_error(ground, target):
+	return (target - ground) / ground
 
 def orderinvarient_hash(x,l=22):
 	x=flatten(x)

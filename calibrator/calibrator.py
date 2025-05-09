@@ -75,6 +75,7 @@ if __name__ == "__main__":
 	elapsed = int(time.perf_counter() - start)
 	sys.stderr.write(f"Actually ran in {timedelta(seconds=elapsed)}\n")
 	print("finished")
+	#todo better calibration printing
 	print(calibration[0])
 	print(calibration[1])
 	print(calibration[2])
