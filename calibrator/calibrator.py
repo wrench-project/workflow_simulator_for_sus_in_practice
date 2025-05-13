@@ -53,7 +53,7 @@ if __name__ == "__main__":
 		raise ParseException()
 	loss = 	losses.Loss(loss,aggregator)
 	if args.verbose:
-		verbosity = ["sim_error","parse_error","loss_error"]
+		verbosity = ["sim_error","parse_error"]
 	else:
 		verbosity = []
 	

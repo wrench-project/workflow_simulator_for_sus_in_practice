@@ -71,7 +71,7 @@ if __name__ == "__main__":
 					from simcal.coordinators import ThreadPool
 					coordinator=ThreadPool(args.num_threads)
 				if args.verbose:
-					verbosity = ["sim_error","parse_error","loss_error"]
+					verbosity = ["sim_error","parse_error"]
 				else:
 					verbosity = []
 				algs=AlgManager(args.task_selection_schemes,args.worker_selection_schemes,args.num_cores_selection_schemes)
