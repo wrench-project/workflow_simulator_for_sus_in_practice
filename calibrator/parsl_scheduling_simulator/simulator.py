@@ -13,6 +13,8 @@ import sys
 # CalibrationSimulator is for offline calibration of the simulator.  It is given a calibration at each run and is initialized with a loss function to use and a list of "ground truth" executions to use.  These include the workflow specs and the schedule used for each groundtruth run as well as the expected output.  Run will then run the simulator for each execution in the ground truth and return a scalar using the loss function
 
 # ErrorCorrectionSimulator is for online error correction of the simulator.  It is given a calibration at each run and is initialized with a loss function to use and the state of a single partial execution, and a scheduling algorithm.  Run will then run the simulator using that state and return a scalar using the loss function
+
+# Verbosity flags, "sim_error", "loss_error", "parse_error"
 class Simulator(sc.Simulator):
 	def __init__(self,simulator_path,json_template,verbosity = None):
 		self.verbosity=[]
@@ -174,7 +176,16 @@ class CalibrationSimulator(Simulator):
 			#print(json_args)
 			output=self.exec(json_args,env)
 			losses.append(self.loss.loss(output,experiment.ground_truth))
-		return self.loss.aggregator(losses)
+		try:
+			ret = self.loss.aggregator(losses)
+		except:
+			if "loss_error" in self.verbosity:
+				print("Error while calculating loss for simulation with args")
+				print(json_args)
+				print("and output")
+				print(output)
+			raise
+		return ret
 		
 # probably optional with calibrator, just replace losses and experiments
 class ErrorCorrectionSimulator(Simulator):
