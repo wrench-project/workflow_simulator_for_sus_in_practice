@@ -159,9 +159,11 @@ class Experiment:
 	def __repr__(self):
 		return str(self.experiment_params)
 class CalibrationSimulator(Simulator):
-	def __init__(self,simulator_path,json_template,experiments,alg, loss ,verbosity = None):
+	def __init__(self,simulator_path,json_template,experiments,alg, loss ,verbosity = None, allowEmptyExperiments=False):
 		super().__init__(simulator_path,json_template,verbosity)
 		self.experiments=experiments
+		if not allowEmptyExperiments and (not experiments or len(self.experiments)==0):
+			raise ValueError("CalibrationSimulator created without experiments.  If this is intentional pass `allowEmptyExperiments=True`")
 		self.loss=loss
 		self.alg=alg
 	
