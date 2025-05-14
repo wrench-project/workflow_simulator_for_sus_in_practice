@@ -8,7 +8,6 @@ import re
 from parsl_scheduling_simulator.util import *
 from parsl_scheduling_simulator.simulator import *
 import sys
-import ast
 # There are 3 different simulators for the 3 different situations we will run them in
 # SchedulingSimulator is for making scheduling decisions.  It is given the state parts of the json (ie the "workflow" sub object) at each run and is initialized with a calibration and a set of scheduling algorithms, and a metric to use.  Run will then run the simulator on that state with that calibration for each algorithm and return the algorithm(s) with the lowest score according to the metric.  THIS VERSION IS NOT INTENDED TO BE RAN WITH SIMCAL
 
@@ -46,7 +45,7 @@ if __name__ == "__main__":
 			try:
 				args=parser.parse_args()
 				if(args.calibration):
-					calibration=ast.literal_eval(raw_to_ast(lineargs.calibration))
+					calibration=json.loads(args.calibration)
 				else:
 					calibration={}
 				if(args.state is not None):
@@ -103,7 +102,7 @@ if __name__ == "__main__":
 			try:
 				args=parser.parse_args()
 				if(args.calibration):
-					calibration=ast.literal_eval(raw_to_ast(lineargs.calibration))
+					calibration=json.loads(args.calibration)
 				else:
 					calibration={}
 				
@@ -171,7 +170,7 @@ if __name__ == "__main__":
 			try:
 				args=parser.parse_args()
 				if(args.calibration):
-					calibration=ast.literal_eval(raw_to_ast(lineargs.calibration))
+					calibration=json.loads(args.calibration)
 				else:
 					calibration={}
 				if(args.state is not None):
