@@ -169,7 +169,7 @@ class CalibrationSimulator(Simulator):
 		self.coordinator=coordinator
 	def run_with_loss(self,json_args,env,ground_truth):
 		output=self.exec(json_args,env)
-		return self.loss.loss(output,experiment)
+		return self.loss.loss(output,ground_truth)
 	def run(self,env,args):
 		losses=[]
 		for experiment in self.experiments:
