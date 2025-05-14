@@ -159,14 +159,17 @@ class Experiment:
 	def __repr__(self):
 		return str(self.experiment_params)
 class CalibrationSimulator(Simulator):
-	def __init__(self,simulator_path,json_template,experiments,alg, loss ,verbosity = None, allowEmptyExperiments=False):
+	def __init__(self,simulator_path,json_template,experiments,alg, loss ,verbosity = None, allowEmptyExperiments=False, coordinator=None):
 		super().__init__(simulator_path,json_template,verbosity)
 		self.experiments=experiments
 		if not allowEmptyExperiments and (not experiments or len(self.experiments)==0):
 			raise ValueError("CalibrationSimulator created without experiments.  If this is intentional pass `allowEmptyExperiments=True`")
 		self.loss=loss
 		self.alg=alg
-	
+		self.coordinator=coordinator
+	def run_with_loss(json_args,env,ground_truth):
+		output=self.exec(json_args,env)
+		return self.loss.loss(output,experiment)
 	def run(self,env,args):
 		losses=[]
 		for experiment in self.experiments:
@@ -174,8 +177,13 @@ class CalibrationSimulator(Simulator):
 			json_args=self.modifyJSON(json_args,experiment.experiment_params)
 			json_args=self.modifyJSON_tagged(json_args,args)
 			#print(json_args)
-			output=self.exec(json_args,env)
-			losses.append(self.loss.loss(output,experiment.ground_truth))
+			if self.coordinator:
+				self.coordinator.allocate(self.run_with_loss,(json_args,env,experiment.ground_truth))
+			else:
+				output=self.exec(json_args,env)
+				losses.append(self.loss.loss(output,experiment.ground_truth))
+		if self.coordinator:
+			results = coordinator.await_all()
 		return self.loss.aggregator(losses)
 		
 # probably optional with calibrator, just replace losses and experiments

@@ -94,6 +94,7 @@ if __name__ == "__main__":
 			parser.add_argument("-t", "--template", type=str, help="Template JSON as string", required=True)
 			parser.add_argument("-e", "--experiments", nargs='+', type=str, help="Path to workflow files to run for experiment", required=True)
 			parser.add_argument("-l", "--loss", type=str, help="Loss Function to use", default='relative_makespan_loss')
+			parser.add_argument("-n", "--num_threads", type=int, help="Number of threads", required=False)
 			parser.add_argument("-a", "--aggregator", type=str, help="Loss aggregator to use", default='avg_aggregator')
 			parser.add_argument("-tss", "--task_selection_scheme", type=str, help="Task selection scheme", required=True)
 			parser.add_argument("-wss", "--worker_selection_scheme", type=str, help="Worker selection scheme", required=True)
@@ -119,7 +120,11 @@ if __name__ == "__main__":
 				else:
 					print(f"Error: loss function {args.loss} does not exist")
 					raise ParseException()
-					
+				if not args.num_threads or args.num_threads==1:
+					coordinator=None
+				else:
+					from simcal.coordinators import ThreadPool
+					coordinator=ThreadPool(args.num_threads)	
 				if hasattr(losses, args.aggregator):  
 					aggregator = getattr(losses, args.aggregator)  # Get the function
 				else:
@@ -142,7 +147,7 @@ if __name__ == "__main__":
 					experiments[i]=Experiment(experiments[i])
 				
 				alg=SchedulingAlg(args.task_selection_scheme,args.worker_selection_scheme,args.num_cores_selection_scheme)	
-				simulator=CalibrationSimulator(args.simulator_path,template,experiments,alg,loss,verbosity = verbosity)
+				simulator=CalibrationSimulator(args.simulator_path,template,experiments,alg,loss,verbosity = verbosity, coordinator=coordinator)
 				params=simulator.dictToTagged(calibration)
 				ret=simulator(params)
 				print(ret)
