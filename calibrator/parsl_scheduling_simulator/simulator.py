@@ -183,7 +183,7 @@ class CalibrationSimulator(Simulator):
 				output=self.exec(json_args,env)
 				losses.append(self.loss.loss(output,experiment.ground_truth))
 		if self.coordinator:
-			results = self.coordinator.await_all()
+			losses = self.coordinator.await_all()
 		return self.loss.aggregator(losses)
 		
 # probably optional with calibrator, just replace losses and experiments
