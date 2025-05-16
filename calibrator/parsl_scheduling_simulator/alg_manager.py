@@ -25,6 +25,19 @@ class SchedulingAlg(object):
 	def __repr__(self):
 		return str(self.asDict())
 		
+	def __eq__(self, other):
+		if isinstance(other,self.__class__):
+			return other.task_selection_scheme==self.task_selection_scheme and \
+				other.worker_selection_scheme==self.worker_selection_scheme and \
+				other.num_cores_selection_scheme==self.num_cores_selection_scheme
+		if isinstance(other,dict):
+			return other["task_selection_scheme"]==self.task_selection_scheme and \
+				other["worker_selection_scheme"]==self.worker_selection_scheme and \
+				other["num_cores_selection_scheme"]==self.num_cores_selection_scheme
+		if isinstance(other,tuple):
+			return other[0]==self.task_selection_scheme and \
+				other[1]==self.worker_selection_scheme and \
+				other[2]==self.num_cores_selection_scheme
 class AlgManager (object):
 	def __init__(self, task_selection_schemes: Iterable[str], worker_selection_schemes: Iterable[str],num_cores_selection_schemes: Iterable[str]):
 		self.task_selection_schemes=task_selection_schemes
@@ -84,7 +97,7 @@ if __name__=="__main__":
 		print(test.modifyJSON(testJson,alg))
 		print(alg.modifyJSON(testJson))
 		print(alg)
-		
+		print(alg==("task_scheme1","worker_scheme1","core_scheme1"))
 	for alg in test.asTuple():
 		print(test.modifyJSON(testJson,alg))
 		print(alg)
