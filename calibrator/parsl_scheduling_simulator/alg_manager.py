@@ -97,7 +97,7 @@ if __name__=="__main__":
 		print(test.modifyJSON(testJson,alg))
 		print(alg.modifyJSON(testJson))
 		print(alg)
-		print(alg==("task_scheme1","worker_scheme1","core_scheme1"))
+		print(("task_scheme1","worker_scheme1","core_scheme1")==alg)
 	for alg in test.asTuple():
 		print(test.modifyJSON(testJson,alg))
 		print(alg)

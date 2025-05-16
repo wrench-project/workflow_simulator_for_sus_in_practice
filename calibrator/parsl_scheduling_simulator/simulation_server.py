@@ -15,8 +15,9 @@ class SimulationRunner:
 		while self.shared_data["running"] and lastState!=self.shared_data["state"]:
 			lastState=self.shared_data["state"]
 			self.shared_data["last_state"]=lastState
+			start=time.now()
 			self.shared_data["ret"]=self.shared_data["simulator"](lastState)
-			
+			self.shared_data["last_state_update"]=time.now()-start	
 class SimulationServer:
 	def __init__(self,simulator):
 		self.manager = multiprocessing.Manager()
@@ -24,7 +25,9 @@ class SimulationServer:
 		self.shared_data["simulator"]=simulator
 		self.shared_data["running"]=True
 		self.shared_data["state"]=None
+		self.shared_data["last_time"]=None
 		self.shared_data["ret"]=None
+		self.simulation_time=None
 		self.runner=SimulationRunner(self.shared_data)
 		self.process = None
 
@@ -38,6 +41,7 @@ class SimulationServer:
 		self.shared_data["running"] = True
 		self.shared_data["state"]=state
 		self.runner.run()
+		self.simulation_time=self.shared_data["last_state_update"]	
 		ret=self.shared_data["ret"]
 		self.update_state(state)
 		return ret
@@ -46,18 +50,19 @@ class SimulationServer:
 		if self.process is not None:
 			self.process.join()
 			self.process = None
+		self.simulation_time=self.shared_data["last_state_update"]	
 		return self.shared_data["ret"]
 		
 	def update_state(self, state):
 		"""Update the shared value."""
 		self.shared_data["state"] = state
-		
 		if self.process is not None and not self.process.is_alive():
 			self.process.join()
 			self.process = None
 		if self.process is None:
 			self.process = multiprocessing.Process(target=self.runner.run)
 			self.process.start()
+		self.simulation_time=self.shared_data["last_state_update"]		
 		return 	self.shared_data["ret"]
 	def stop(self):
 		"""Stop the background process."""
@@ -65,4 +70,5 @@ class SimulationServer:
 		if self.process is not None:
 			self.process.join()
 			self.process = None
+		self.simulation_time=self.shared_data["last_state_update"]		
 		return self.shared_data["ret"]
