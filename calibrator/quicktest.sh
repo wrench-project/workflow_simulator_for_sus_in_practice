@@ -1,0 +1,2 @@
+./simulator.py calibration -p workflow_simulator -t template.json -e ../../parsl_groundtruth/groundtruth_25may1/*/*/* -tss most_flops -wss fastest_cores -nss one_core -c $1 -v -l relative_makespan_loss -a avg_aggregator -n `nproc`
+./simulator.py calibration -p workflow_simulator -t template.json -e ../../parsl_groundtruth/groundtruth_25may1/*/*/* -tss most_flops -wss fastest_cores -nss one_core -c $1 -v -l relative_endtime_loss -a max_aggregator -n `nproc`
