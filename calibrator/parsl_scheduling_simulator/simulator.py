@@ -98,6 +98,8 @@ class SchedulingSimulator(Simulator):
 		super().__init__(simulator_path,json_template,verbosity)
 		self.algs=algs
 		self.metric=metric
+		if( not self.isSimcalCal(calibration)):
+			calibration=self.dictToTagged(calibration)
 		self.calibration=calibration
 		self.coordinator=coordinator
 		if coordinator is None:
@@ -109,10 +111,10 @@ class SchedulingSimulator(Simulator):
 		state=args["state"]
 		json_args=alg.modifyJSON(self.json_template)
 		json_args=self.modifyJSON(json_args,state)
-		if(self.isSimcalCal(self.calibration)):
-			json_args=self.modifyJSON_tagged(json_args,self.calibration)
-		else:
-			json_args=self.modifyJSON(json_args,self.calibration)
+		
+			
+		json_args=self.modifyJSON_tagged(json_args,self.calibration)
+
 		output=self.exec(json_args,env)
 		return self.metric(output)
 		
