@@ -22,7 +22,7 @@ def parseCalibration(path):
 
 def distance(ref,args):
 	resl=0
-	if(args is none):
+	if(args is None):
 		return float('inf')
 	for parameter in args.keys():
 		resl+=abs(relative_error(parseDoubleUnited(ref[parameter]),parseDoubleUnited(args[parameter])))
