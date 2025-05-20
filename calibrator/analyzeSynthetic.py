@@ -14,8 +14,10 @@ def parseCalibration(path):
 		content=f.read()
 	content=content.split("\n")
 	for line in content:
-		if line[0]=='{':
+		if len(line)>0 and line[0]=='{':
 			return ast.literal_eval(raw_to_ast(line)),name
+	print("error on file",path)
+	print(content)
 	return None
 
 def distance(ref,args):
