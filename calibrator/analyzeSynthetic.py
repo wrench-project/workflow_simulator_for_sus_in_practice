@@ -27,6 +27,7 @@ def distance(ref,args):
 	for parameter in args.keys():
 		resl+=abs(relative_error(parseDoubleUnited(ref[parameter]),parseDoubleUnited(args[parameter])))
 		print(parameter,resl)
+	print("total",resl)
 	return resl
 	
 experiments = []
