@@ -18,7 +18,7 @@ def parseCalibration(path):
 			return ast.literal_eval(raw_to_ast(line)),name
 	print("error on file",path)
 	print(content)
-	return None
+	return None,name
 
 def distance(ref,args):
 	resl=0
