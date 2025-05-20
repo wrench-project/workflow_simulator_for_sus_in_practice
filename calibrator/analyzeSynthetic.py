@@ -26,7 +26,7 @@ def distance(ref,args):
 		return float('inf')
 	for parameter in args.keys():
 		resl+=abs(relative_error(parseDoubleUnited(ref[parameter]),parseDoubleUnited(args[parameter])))
-		print(parameter,resl)
+		print(parameter,abs(relative_error(parseDoubleUnited(ref[parameter]),parseDoubleUnited(args[parameter]))))
 	print("total",resl)
 	return resl
 	
