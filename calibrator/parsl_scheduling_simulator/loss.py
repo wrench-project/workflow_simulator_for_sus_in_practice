@@ -80,7 +80,7 @@ def relative_endpoint_dif2(simulated,real):
 		simt=simulated["task_completions"][taskid]
 		union=max((realt["executedAt"]+realt["runtimeInSeconds"]),simt["end_date"])-min(realt["executedAt"],simt["start_date"])
 		intersection=min((realt["executedAt"]+realt["runtimeInSeconds"]),simt["end_date"])-max(realt["executedAt"],simt["start_date"])
-		total+= 1-union/intersection
+		total+= abs(1-union/intersection)
 	return total/len(real["tasks"])
 
 	
