@@ -35,7 +35,7 @@ def flatten(arr):
 			flat_list.append(item)  # Append non-list item
 	return flat_list
 def relative_error(ground, target):
-	return (target - ground) / ground
+	return abs(target - ground) / ground
 
 def orderinvarient_hash(x,l=22):
 	x=flatten(x)
