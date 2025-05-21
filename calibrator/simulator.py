@@ -45,7 +45,7 @@ if __name__ == "__main__":
 			try:
 				args=parser.parse_args()
 				if(args.calibration):
-					calibration=json.loads(args.calibration)
+					calibration=ast.literal_eval(raw_to_ast(lineargs.calibration))
 				else:
 					calibration={}
 				if(args.state is not None):
