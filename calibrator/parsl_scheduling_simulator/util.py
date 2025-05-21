@@ -10,6 +10,19 @@ _units={None:1,"":1,
 "b":1,"Kb":1_000,"Mb":1_000_000,"Gb":1_000_000_000,
 "B":1,"KB":1_000,"MB":1_000_000,"GB":1_000_000_000}
 
+def ensureFull(calibration):
+	flagWords={'wms_read_bandwidth', 'wms_write_bandwidth','wms_network_bandwidth','worker_speed','worker_network_bandwidth','task_scheduling_overhead','task_ready_delay'}
+	for term in flagWords:#check that all flag words are in callibration
+		if term not in calibration:
+			break
+	else:	
+		for key in calibration: #check that the calibration only contains flag words
+			if key not in flagWords:
+				break
+		else:
+		#convert
+			return {"platform":{"wms":{"disk_read_bandwidth":calibration['wms_read_bandwidth'],"disk_write_bandwidth":calibration['wms_write_bandwidth'],"network_bandwidth":calibration['wms_network_bandwidth']},"workers":{"worker\\d":{"speed":calibration['worker_speed'],"network_bandwidth":calibration['worker_network_bandwidth']}}},"scheduling":{"task_scheduling_overhead":calibration['task_scheduling_overhead'],"task_ready_delay": calibration['task_ready_delay']}}
+	return calibration
 def raw_to_ast(input_str):
     
 	items=input_str[1:-1].split(",")
