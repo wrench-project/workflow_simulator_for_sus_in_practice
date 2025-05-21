@@ -25,6 +25,7 @@ if __name__ == "__main__":
 	import parsl_scheduling_simulator.metrics as metrics
 	import parsl_scheduling_simulator.loss as losses
 	from glob import glob
+	import ast
 	
 	try:
 		sub=sys.argv[1].lower()
