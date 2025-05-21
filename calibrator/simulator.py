@@ -46,7 +46,7 @@ if __name__ == "__main__":
 			try:
 				args=parser.parse_args()
 				if(args.calibration):
-					calibration=ast.literal_eval(raw_to_ast(lineargs.calibration))
+					calibration=ast.literal_eval(raw_to_ast(args.calibration))
 				else:
 					calibration={}
 				if(args.state is not None):
@@ -104,7 +104,7 @@ if __name__ == "__main__":
 			try:
 				args=parser.parse_args()
 				if(args.calibration):
-					calibration=ast.literal_eval(raw_to_ast(lineargs.calibration))
+					calibration=ast.literal_eval(raw_to_ast(args.calibration))
 				else:
 					calibration={}
 				
@@ -176,7 +176,7 @@ if __name__ == "__main__":
 			try:
 				args=parser.parse_args()
 				if(args.calibration):
-					calibration=ast.literal_eval(raw_to_ast(lineargs.calibration))
+					calibration=ast.literal_eval(raw_to_ast(args.calibration))
 				else:
 					calibration={}
 				if(args.state is not None):
