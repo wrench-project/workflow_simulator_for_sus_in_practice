@@ -21,7 +21,7 @@ def ensureFull(calibration):
 				break
 		else:
 		#convert
-			return {"platform":{"wms":{"disk_read_bandwidth":calibration['wms_read_bandwidth'],"disk_write_bandwidth":calibration['wms_write_bandwidth'],"network_bandwidth":calibration['wms_network_bandwidth']},"workers":{"worker\\d":{"speed":calibration['worker_speed'],"network_bandwidth":calibration['worker_network_bandwidth']}}},"scheduling":{"task_scheduling_overhead":calibration['task_scheduling_overhead'],"task_ready_delay": calibration['task_ready_delay']}}
+			return {"platform":{"wms":{"disk_read_bandwidth":calibration['wms_read_bandwidth'],"disk_write_bandwidth":calibration['wms_write_bandwidth'],"network_bandwidth":calibration['wms_network_bandwidth']},"workers":{"worker\\d":{"speed":calibration['worker_speed'],"network_bandwidth":calibration['worker_network_bandwidth']}}},"scheduling":{"task_scheduling_overhead":float(calibration['task_scheduling_overhead']),"task_ready_delay": float(calibration['task_ready_delay'])}}
 	return calibration
 def raw_to_ast(input_str):
     
